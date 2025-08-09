@@ -1,0 +1,22 @@
+<!--begin::General Widget 1-->
+<div class="mb-10">
+    <!--begin::Section-->
+    <div class="mb-16">
+        <!--begin::Top-->
+        <div class="text-center mb-12">
+            <!--begin::Title-->
+            <span class="h1 fs-2hx font-weight-bold mb-5">Акции</span>
+            <a href="{% url 'campaigns_list' %}" class="h1 text-muted bg-hover-light-warning text-hover-inverse-light px-5 d-none d-lg-inline">Все акции</a>
+            <!--end::Title-->
+            <!--begin::Text-->
+            <div class="fs-5 text-muted fw-bold">Для участия, выберите интересную вам акцию у любого из активных рекламодателей.</div>
+            <!--end::Text-->
+        </div>
+        <!--end::Top-->
+
+        {% include "frontend/partials/widgets-2/general/_widget-campaigns.html" %}
+
+    </div>
+    <!--end::Section-->
+</div>
+<!--end::General Widget 1-->

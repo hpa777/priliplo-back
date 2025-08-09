@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}{{ title_1 }}{% endblock title %}
+
+
+{% block content %}
+    <!--begin::Basic info-->
+    <div class="card mb-5 mb-xl-10">
+        <!--begin::Card header-->
+        <div class="card-header border-0 " data-bs-target="#kt_task_details" aria-expanded="true" aria-controls="kt_task_details">
+            <!--begin::Card title-->
+            <div class="card-title m-0">
+                <h3 class="fw-bolder m-0">{{ title_2 }}</h3>
+            </div>
+            <!--end::Card title-->
+        </div>
+        <!--begin::Card header-->
+        <!--begin::Content-->
+        <div id="kt_task_details" >
+            <!--begin::Form-->
+
+                <!--begin::Card body-->
+                <div class="card-body border-top p-9">
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Название задачи</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8 fv-row">
+                            {{ object.title }}
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Описание задачи</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8 fv-row">
+                            {{ object.description }}
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Автовладелец</label>
+                        <div class="col-lg-8 fv-row">
+                            {% if object.client %}
+                            <a id="request_applications_user_id{{ object.client.pk }}" class="cursor-pointer">{{ object.client.userprofile.get_full_name }} - {{ object.client.userprofile.phone }} - {{ object.client.username }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Рекламодатель</label>
+                        <div class="col-lg-8 fv-row">
+                            {% if object.advertiser %}
+                                {{ object.advertiser.company_name }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Акция</label>
+                        <div class="col-lg-8 fv-row">
+                            {% if object.campaign %}
+                                {{ object.campaign }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Планируемая дата завершения</label>
+                        <!--begin::Col-->
+                        <div class="col-lg-8 fv-row">
+                            <div class="position-relative d-flex align-items-center">
+                                {% if form.data.plane_finish_date != None %}{{ form.data.plane_finish_date|date:"d-m-Y H:i" }}{% endif %}
+                            </div>
+                        </div>
+                        <!--begin::Col-->
+                    </div>
+                    <!--end::Row-->
+
+
+                </div>
+                <!--end::Card body-->
+                <!--begin::Actions-->
+                <div class="card-footer d-flex py-6 px-9">
+                        <a href="{% url "adminpanel:todo_list" %}" class="btn btn-light-warning me-2"><i class="fas fa-arrow-left"></i> Назад</a>
+                </div>
+                <!--end::Actions-->
+
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Basic info-->
+
+
+        <!--begin::Инфа о пользователе-->
+        <div id="request_applications_userinfo_id{{ object.client.pk }}" class="bg-white" data-kt-drawer="true" data-kt-drawer-activate="true" data-kt-drawer-toggle="#request_applications_user_id{{ object.client.pk }}" data-kt-drawer-close="#request_applications_user_id{{ object.client.pk }}_close" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}">
+        <div class="card w-100">
+            <div class="card-header pe-5">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1">{{ object.client.userprofile.get_full_name }}</a>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary" id="request_applications_user_id{{ object.client.pk }}_close">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body hover-scroll-overlay-y">
+                {% include "./clientinfo/client_info_panel.html" with application=object %}
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-2">
+                        <button class="btn btn-light-warning" data-kt-drawer-dismiss="true">Закрыть</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        </div>
+        <!--end::Инфа о пользователе-->
+{% endblock content %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block javascript %}
+
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            $("#plane_finish_date").flatpickr({
+                enableTime: true,
+                time_24hr: true,
+                minDate: "today",
+                dateFormat: "d-m-Y H:i",
+                "locale": "ru",
+            });
+
+        });
+    </script>
+{% endblock javascript %}

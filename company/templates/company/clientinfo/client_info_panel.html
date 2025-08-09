@@ -1,0 +1,138 @@
+{% load global_tags %}
+{% load thumbnail %}
+
+    <!-- Инфа из полей -->
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Марка автомобиля:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.auto_marka }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Модель:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.auto_model }}</span>
+    </div>
+    {% if application.client.userprofile.auto_markamodel_other != '' %}
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="font-weight-bold mr-2">Марка и модель:</span>
+            <span class="text-muted text-hover-primary">{{ application.client.userprofile.auto_markamodel_other }}</span>
+        </div>
+    {% endif %}
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Год выпуска автомобиля:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.autogv }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Гос номер автомобиля:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.autonumber }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Пробег:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.odometer }} км в месяц</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Тип транспортного средства:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.auto_type }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Страна:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.country }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Город:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.city }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Районы присутствия:</span>
+        <span class="text-muted text-hover-primary text-end">
+            {% for district in application.client.userprofile.district.all %}
+                <div class="text-end">{{ district.title }}</div>
+            {% endfor %}
+        </span>
+    </div>
+
+    <div class="separator my-2"></div>
+
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Вид автомобиля сбоку:</span>
+        <div class="text-muted text-hover-primary">
+            <!--begin::Overlay-->
+            <a class="d-block overlay" data-fslightbox="lightbox-basic" href="/media/{{ application.client.userprofile.auto_sideview }}">
+                {% thumbnail application.client.userprofile.auto_sideview "100x100" crop="center" as im %}
+                    <!--begin::Image-->
+                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-100px min-w-100px"
+                         style="background-image:url('{{ im.url }}')">
+                    </div>
+                    <!--end::Image-->
+                {% endthumbnail %}
+            </a>
+            <!--end::Overlay-->
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Вид автомобиля сзади:</span>
+        <div class="text-muted text-hover-primary">
+            <!--begin::Overlay-->
+            <a class="d-block overlay" data-fslightbox="lightbox-basic" href="/media/{{ application.client.userprofile.auto_rearview }}">
+                {% thumbnail application.client.userprofile.auto_rearview "100x100" crop="center" as im %}
+                    <!--begin::Image-->
+                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-100px min-w-100px"
+                         style="background-image:url('{{ im.url }}')">
+                    </div>
+                    <!--end::Image-->
+                {% endthumbnail %}
+            </a>
+            <!--end::Overlay-->
+        </div>
+    </div>
+
+    <div class="separator my-2"></div>
+
+    {% for old_photoreport in application.get_photoreports %}
+        <h6 class="text-end">Отчет за {{ old_photoreport.created_date }}</h6>
+        <div class="separator my-2"></div>
+        {% if forloop.counter0 != 0 %}
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="font-weight-bold mr-2">Указанный пробег:</span>
+            <span class="text-muted text-hover-primary">{{ old_photoreport.odometer }} км </span>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="font-weight-bold mr-2">Пробег с предыдущего отчета:</span>
+            <span class="text-muted text-hover-primary">{% compare_current_w_prev application.get_photoreports forloop.counter0 %} км </span>
+        </div>
+        {% else %}
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="font-weight-bold mr-2">Начальный пробег:</span>
+            <span class="text-muted text-hover-primary">{{ old_photoreport.odometer }} км </span>
+        </div>
+        {% endif %}
+
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="font-weight-bold mr-2">Фотография одометра:</span>
+            <div class="text-muted text-hover-primary">
+                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="/media/{{ old_photoreport.photoreport_odometer }}">
+                    {% thumbnail old_photoreport.photoreport_odometer "100x100" crop="center" as im %}
+                        <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-100px min-w-100px"
+                             style="background-image:url('{{ im.url }}')">
+                        </div>
+                    {% endthumbnail %}
+
+                </a>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <span class="font-weight-bold mr-2">Фотография наклейки:</span>
+            <div class="text-muted text-hover-primary">
+                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="/media/{{ old_photoreport.photoreport_sticker }}">
+                    {% thumbnail old_photoreport.photoreport_sticker "100x100" crop="center" as im %}
+                        <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-100px min-w-100px"
+                             style="background-image:url('{{ im.url }}')">
+                        </div>
+                    {% endthumbnail %}
+
+                </a>
+            </div>
+        </div>
+
+        <div class="separator my-2"></div>
+    {% endfor %}

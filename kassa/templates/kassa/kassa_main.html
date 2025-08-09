@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load pluralize %}
+
+{% block title %}Кабинет кассира{% endblock title %}
+
+{% block content %}
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container">
+                <!--begin::Stepper-->
+                <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid" id="kt_create_account_stepper">
+                    <!--begin::Aside-->
+                    <div class="d-flex justify-content-center bg-white rounded justify-content-xl-start flex-row-auto w-100 w-xl-300px w-xxl-400px me-9">
+                        <!--begin::Wrapper-->
+                        <div class="px-6 px-lg-10 px-xxl-15 py-20">
+                            <!--begin::Nav-->
+                            <div class="stepper-nav">
+                                <!--begin::Step 1-->
+                                <div class="stepper-item current" data-kt-stepper-element="nav">
+                                    <!--begin::Line-->
+                                    <div class="stepper-line w-40px"></div>
+                                    <!--end::Line-->
+                                    <!--begin::Icon-->
+                                    <div class="stepper-icon w-40px h-40px">
+                                        <i class="stepper-check fas fa-check"></i>
+                                        <span class="stepper-number">1</span>
+                                    </div>
+                                    <!--end::Icon-->
+                                    <!--begin::Label-->
+                                    <div class="stepper-label">
+                                        <h3 class="stepper-title">Телефон клиента</h3>
+                                        <div class="stepper-desc fw-bold">Найдем клиента по номеру телефона</div>
+                                    </div>
+                                    <!--end::Label-->
+                                </div>
+                                <!--end::Step 1-->
+                                <!--begin::Step 2-->
+                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                    <!--begin::Line-->
+                                    <div class="stepper-line w-40px"></div>
+                                    <!--end::Line-->
+                                    <!--begin::Icon-->
+                                    <div class="stepper-icon w-40px h-40px">
+                                        <i class="stepper-check fas fa-check"></i>
+                                        <span class="stepper-number">2</span>
+                                    </div>
+                                    <!--end::Icon-->
+                                    <!--begin::Label-->
+                                    <div class="stepper-label">
+                                        <h3 class="stepper-title">Информация об аккаунте</h3>
+                                        <div class="stepper-desc fw-bold">Количество баллов на счете</div>
+                                    </div>
+                                    <!--end::Label-->
+                                </div>
+                                <!--end::Step 2-->
+                                <!--begin::Step 3-->
+                                <div class="stepper-item" data-kt-stepper-element="nav">
+                                    <!--begin::Line-->
+                                    <div class="stepper-line w-40px"></div>
+                                    <!--end::Line-->
+                                    <!--begin::Icon-->
+                                    <div class="stepper-icon w-40px h-40px">
+                                        <i class="stepper-check fas fa-check"></i>
+                                        <span class="stepper-number">3</span>
+                                    </div>
+                                    <!--end::Icon-->
+                                    <!--begin::Label-->
+                                    <div class="stepper-label">
+                                        <h3 class="stepper-title">Код подтверждения</h3>
+                                        <div class="stepper-desc fw-bold">Код у клиента в личном кабинете</div>
+                                    </div>
+                                    <!--end::Label-->
+                                </div>
+                                <!--end::Step 3-->
+
+                            </div>
+                            <!--end::Nav-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--begin::Aside-->
+                    <!--begin::Content-->
+                    <div class="d-flex flex-row-fluid flex-center bg-white rounded">
+                        <!--begin::Form-->
+                        <form class="py-20 w-100 w-xl-700px px-9" novalidate="novalidate" id="kt_create_account_form">
+                            <!--begin::Step 1-->
+                            <div class="current" data-kt-stepper-element="content">
+                                <!--begin::Wrapper-->
+                                <div class="w-100">
+                                    <!--begin::Heading-->
+                                    <div class="pb-10 pb-lg-15">
+                                        <!--begin::Title-->
+                                        <h2 class="fw-bolder d-flex align-items-center text-dark">Введите телефон клиента</h2>
+                                        <!--end::Title-->
+                                        <!--begin::Notice-->
+                                        <div class="text-gray-400 fw-bold fs-6">После этого вы узнаете количество баллов на его балансе.</div>
+                                        <!--end::Notice-->
+                                    </div>
+                                    <!--end::Heading-->
+                                    <!--begin::Input group-->
+                                    <div class="mb-10 fv-row">
+                                        <!--begin::Label-->
+                                        <label class="form-label mb-3">Телефон</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <input type="text" class="form-control form-control-lg form-control-solid" name="client_phone" id="client_phone" placeholder="" value="" autocomplete="disabled" />
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Input group-->
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Step 1-->
+                            <!--begin::Step 2-->
+                            <div data-kt-stepper-element="content">
+                                <!--begin::Wrapper-->
+                                <div class="w-100">
+                                    <!--begin::Heading-->
+                                    <div class="pb-10 pb-lg-15">
+                                        <!--begin::Title-->
+                                        <h2 class="fw-bolder text-dark">Информация об аккаунте</h2>
+                                        <!--end::Title-->
+                                        <!--begin::Notice-->
+                                        <h2 class="fw-bold mt-10" id="client_user_info"></h2>
+                                        <h3 class="fw-bold mt-5">Баллов на счете: <span class="fw-bolder" id="client_user_balance"></span></h3>
+                                        <!--end::Notice-->
+                                    </div>
+                                    <!--end::Heading-->
+
+                                    <!--begin::Input group-->
+                                    <div class="mb-10 fv-row">
+                                        <!--begin::Label-->
+                                        <label class="form-label mb-3">Сколько баллов списать</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <input type="number" class="form-control form-control-lg form-control-solid" name="balance_decrease" id="balance_decrease" placeholder="" value="" />
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Input group-->
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Step 2-->
+                            <!--begin::Step 3-->
+                            <div data-kt-stepper-element="content">
+                                <!--begin::Wrapper-->
+                                <div class="w-100">
+                                    <!--begin::Heading-->
+                                    <div class="pb-10 pb-lg-12">
+                                        <!--begin::Title-->
+                                        <h2 class="fw-bolder text-dark">Код подтверждения</h2>
+                                        <!--end::Title-->
+                                        <!--begin::Notice-->
+                                        <div class="text-gray-400 fw-bold fs-6">Код у клиента в личном кабинете под балансом баллов. Для снятия баллов с баланса, введите этот код.</div>
+                                        <!--end::Notice-->
+                                    </div>
+                                    <!--end::Heading-->
+                                    <!--begin::Input group-->
+                                    <div class="fv-row mb-10">
+                                        <!--begin::Label-->
+                                        <label class="form-label required">Код подтверждения</label>
+                                        <!--end::Label-->
+                                        <!--begin::Input-->
+                                        <input type="number" name="sms_code" id="sms_code" class="form-control form-control-lg form-control-solid" value="" />
+                                        <!--end::Input-->
+                                    </div>
+                                    <!--end::Input group-->
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Step 3-->
+
+                            <!--begin::Actions-->
+                            <div class="d-flex flex-stack pt-10">
+                                <!--begin::Wrapper-->
+                                <div class="mr-2">
+                                    <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
+                                        <i class="fas fa-arrow-left"></i> Назад</button>
+                                </div>
+                                <!--end::Wrapper-->
+                                <!--begin::Wrapper-->
+                                <div>
+                                    <button type="button" class="btn btn-lg btn-primary me-3" data-kt-stepper-action="submit">
+                                        <span class="indicator-label">Списать баллы <i class="fas fa-arrow-right"></i></span>
+                                        <span class="indicator-progress">Подождите...
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">
+                                        <span class="indicator-label">
+                                            Продолжить
+                                        </span>
+                                        <span class="indicator-progress">
+                                            Подождите... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        </span>
+
+                                        <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Actions-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Stepper-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Post-->
+    </div>
+    <!--end::Content-->
+
+
+{% endblock content %}
+
+{% block javascript %}
+    <script src="/static/metronic/html/theme/demo1/dist/assets/js/custom/modals/kassa-wizard.js"></script>
+{% endblock javascript %}

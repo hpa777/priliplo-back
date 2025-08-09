@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Список запросов на участие в акциях{% endblock title %}
+
+
+{% block content %}
+    <div class="modal fade" tabindex="-1" id="request_application_decline_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="needs-validation" id="request_application_decline_form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="request_application_decline_id" value="">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Подтверждение отказа клиенту</h5>
+
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                            <span class="svg-icon svg-icon-2x"></span>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+
+                    <div class="modal-body">
+                        <p>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Введите причину отказа" id="decline_note" name="decline_note" style="height: 100px" required></textarea>
+                            <label for="floatingTextarea2">Причина отказа</label>
+                        </div>
+                        </p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-danger">Отказать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--begin::Toolbar-->
+    <div class="d-flex flex-wrap flex-stack pb-7">
+        <!--begin::Title-->
+        <div class="d-flex flex-wrap align-items-center my-1">
+            <h3 class="fw-bolder me-5 my-1">Запросы на оклейку ({{ object_list.count }})</h3>
+        </div>
+        <!--end::Title-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+
+
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 min-w-100px ">Дата</th>
+                                        <th class="p-0 min-w-250px ">Имя</th>
+                                        <th class="p-0 w-200px text-center">Акция</th>
+                                        <th class="p-0 w-200px text-center">Запись</th>
+                                        <th class="p-0 w-250px text-center">Автомобиль</th>
+                                        <th class="p-0 w-150px">&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for application in object_list %}
+                                        <tr>
+{#                                            <td>#}
+{#                                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-50px w-100px"#}
+{#                                                     style="background-image:url('/media/{{ application.client.userprofile.auto_sideview }}')">#}
+{#                                                </div>#}
+{#                                            </td>#}
+                                            <td class="text-center text-muted fw-bold">{{ application.created_date }}<br>{{ application.edited_date }}</td>
+                                            <td>
+                                                <a id="request_applications_user_id{{ application.client.pk }}" class="text-dark fw-bolder text-hover-primary mb-1 fs-6 cursor-pointer">{{ application.client.userprofile.get_full_name }}</a><br>
+                                                {{ application.client.userprofile.phone }}
+                                            </td>
+                                            <td class="text-center text-muted fw-bold">
+                                                <span class="badge badge-light-success">{{ application.advertiser.company_name }}</span><br>
+                                                <span class="badge badge-light-warning">{{ application.campaign.title }}</span>
+                                            </td>
+                                            <td class="text-center text-muted fw-bold">
+                                                <div class="position-relative">
+                                                <input class="form-control form-control-solid form-control-sm sticker_reservation" data-input value="{% if application.sticker_reserve_date %}{{ application.sticker_reserve_date|date:"d-m-Y H:i" }}{% endif %}" placeholder="Запись на время" data-applicationid="{{ application.pk }}" />
+
+                                                <div class="spinner-border text-primary spinner-border-sm position-absolute top-25 end-0 me-5 d-none" role="status" >
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center text-muted fw-bold"><b>{{ application.client.userprofile.auto_marka }} {{ application.client.userprofile.auto_model }} ({{ application.client.userprofile.autogv }})</b><br>{{ application.client.userprofile.autonumber }} </td>
+
+                                            <td class="text-end">
+                                                <a class="btn btn-danger btn-sm btn-icon cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Отклонить" onclick="show_request_application_decline_modal('{{ application.pk }}')"><i class="fas fa-ban fs-4"></i></a>
+                                                <a class="btn btn-success btn-sm btn-icon cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Оклеен" href="{% url "adminpanel:admin_photoreport" application.pk %}"><i class="fas fa-camera fs-4"></i></a>
+                                            </td>
+
+
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+
+
+
+
+
+
+
+
+
+        <!--end::Tab pane-->
+
+    </div>
+    <!--end::Tab Content-->
+
+
+
+
+
+
+    {% for application in object_list %}
+
+        <!--begin::Инфа о пользователе-->
+        <div id="request_applications_userinfo_id{{ application.pk }}" class="bg-white" data-kt-drawer="true" data-kt-drawer-activate="true" data-kt-drawer-toggle="#request_applications_user_id{{ application.client.pk }}" data-kt-drawer-close="#request_applications_user_id{{ application.client.pk }}_close" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}">
+        <div class="card w-100">
+            <div class="card-header pe-5">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1">{{ application.client.userprofile.get_full_name }}</a>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary" id="request_applications_user_id{{ application.client.pk }}_close">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body hover-scroll-overlay-y">
+                {% include "./clientinfo/client_info_panel.html" with application=application %}
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-2">
+                        <button class="btn btn-light-warning" data-kt-drawer-dismiss="true">Закрыть</button>
+                    </div>
+                    <div class="col-10 text-end">
+                        <button class="btn btn-danger me-md-2" type="button" onclick="show_request_application_decline_modal('{{ application.pk }}');"><i class="fas fa-ban fs-4"></i> Отклонить</button>
+                        <a class="btn btn-success" type="button" href="{% url "adminpanel:admin_photoreport" application.pk %}"><i class="fas fa-check fs-4"></i> Принять</a>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        <!--end::Инфа о пользователе-->
+    {% endfor %}
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+{% block css %}
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+
+    <script>
+        var datatable = $('.kt_datatable').dataTable( {
+            ordering:  false,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
+            }
+        } );
+        var request_application_decline_modal;
+        function show_request_application_decline_modal(id) {
+            request_application_decline_modal.show();
+            let myForm = $('#request_application_decline_form');
+            myForm.attr('action', "/adminpanel/application_action/"+id + "/" + 3 + "/");
+
+            return false;
+        }
+
+        function approve_form(id) {
+            $.get( "/adminpanel/application_action/"+id + "/" + 2, function( data ) {
+                if (data === "ok") {
+                    var drawerElement = document.getElementById("request_applications_userinfo_id" + id);
+                    var drawer = KTDrawer.getInstance(drawerElement);
+                    drawer.hide();
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+        function decline_form(id) {
+            $.post( "/adminpanel/application_action/"+id + "/" + 3, function( data ) {
+                if (data === "ok") {
+                    var drawerElement = document.getElementById("request_applications_userinfo_id" + id);
+                    var drawer = KTDrawer.getInstance(drawerElement);
+                    drawer.hide();
+                    request_application_decline_modal.hide();
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+        $(document).ready(function() {
+            request_application_decline_modal = new bootstrap.Modal(document.getElementById('request_application_decline_modal'))
+
+            $(".sticker_reservation").flatpickr({
+                enableTime: true,
+                time_24hr: true,
+                minDate: "today",
+                dateFormat: "d-m-Y H:i",
+                "locale": "ru",
+                onClose: function(selectedDates, dateStr, instance){
+                    var applicationid = instance.element.dataset.applicationid;
+                    var load_indicator = instance.element.nextElementSibling;
+                    $(load_indicator).removeClass("d-none");
+
+                    $.post("/adminpanel/save_stiker_reserve_date/" + applicationid + "/", {reserve_date: dateStr, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, function (data) {
+                        console.log(data);
+                        $(load_indicator).addClass("d-none");
+                    })
+                }
+            });
+
+        });
+    </script>
+{% endblock javascript %}

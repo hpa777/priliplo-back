@@ -1,0 +1,257 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Список акций требующих модерации{% endblock title %}
+
+
+{% block content %}
+    <div class="modal fade" tabindex="-1" id="request_application_decline_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="needs-validation" id="request_application_decline_form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="request_application_decline_id" value="">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Подтверждение отказа</h5>
+
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                            <span class="svg-icon svg-icon-2x"></span>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+
+                    <div class="modal-body">
+                        <p>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Введите причину отказа" id="decline_note" name="decline_note" style="height: 100px" required></textarea>
+                            <label for="floatingTextarea2">Причина отказа</label>
+                        </div>
+                        </p>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-danger">Отказать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- одобрение акции -->
+    <div class="modal fade" tabindex="-1" id="request_application_approve_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="needs-validation" id="request_application_approve_modal_form" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" id="request_application_approve_id" value="">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Подтверждение одобрения</h5>
+
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                            <span class="svg-icon svg-icon-2x"></span>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="campaign_image" class="form-label">Изображение для акции</label>
+                            <input type="file" name="campaign_image" class="form-control" placeholder="Макет наклейки" accept=".jpg,.gif,.png" required />
+                        </div>
+
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-success">Одобрить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--begin::Toolbar-->
+    <div class="d-flex flex-wrap flex-stack pb-7">
+        <!--begin::Title-->
+        <div class="d-flex flex-wrap align-items-center my-1">
+            <h3 class="fw-bolder me-5 my-1">Запросы ({{ object_list.count }})</h3>
+        </div>
+        <!--end::Title-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+
+
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable" id="">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 w-100px">&nbsp;</th>
+                                        <th class="p-0 w-100px text-center">Логотип</th>
+                                        <th class="p-0 w-150px text-center">Даты проведения</th>
+                                        <th class="p-0 min-w-250px text-center">Название</th>
+                                        <th class="p-0 w-250px text-center">Квота участников</th>
+                                        <th class="p-0 w-250px text-center">Участников</th>
+                                        <th class="p-0 w-200px text-center">Вознаграждение</th>
+                                        <th class="p-0 w-150px">&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for campaign in object_list %}
+                                        <tr>
+                                            <td>
+                                                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="/media/{{ campaign.campaign_image }}">
+                                                    {% thumbnail campaign.campaign_image "100x100" crop="center" as im %}
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-50px w-100px"
+                                                         style="background-image:url('{{ im.url }}')">
+                                                    </div>
+                                                    {% endthumbnail %}
+                                                </a>
+                                            </td>
+                                            <td class="text-center">
+                                                <a class="d-block overlay" href="/media/{{ campaign.logo_image }}">
+                                                    {% thumbnail campaign.logo_image "100x100" crop="center" as im %}
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-50px w-100px"
+                                                         style="background-image:url('{{ im.url }}')">
+                                                    </div>
+                                                    {% endthumbnail %}
+                                                </a>
+                                                <span><a href="/media/{{ campaign.logo_image }}" target="_blank">Скачать</a></span>
+                                                <button class="btn btn-sm btn-active-light-info" data-bs-toggle="popover" data-bs-dismiss="true" data-bs-placement="top" title="Описание" data-bs-content="{{ campaign.sticker_text }}">Текст</button>
+
+                                            </td>
+                                            <td class="text-center lh-1">
+                                                <small>
+                                                    {{ campaign.created_date }}<br>&mdash;<br>{{ campaign.end_date }}
+                                                </small>
+                                            </td>
+                                            <td class="text-center text-muted fw-bold">
+                                                {{ campaign.title }}<br>
+                                                <button class="btn btn-sm btn-active-light-info" data-bs-toggle="popover" data-bs-dismiss="true" data-bs-placement="top" title="Описание" data-bs-content="{{ campaign.short_description }}">Описание</button>
+                                            </td>
+                                            <td class="text-center text-muted fw-bold">{{ campaign.quota }}</td>
+                                            <td class="text-center text-muted fw-bold">{{ campaign.active_applications_count }}</td>
+                                            <td class="text-center text-muted fw-bold">{{ campaign.award }}</td>
+
+                                            <td class="text-end">
+                                                <a class="btn btn-danger btn-sm btn-icon cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Отклонить запрос" onclick="show_request_application_decline_modal('{{ campaign.pk }}')"><i class="fas fa-ban fs-4"></i></a>
+                                                <a class="btn btn-success btn-sm btn-icon cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Принять запрос" onclick="show_request_application_approve_modal('{{ campaign.pk }}');"><i class="fas fa-check fs-4"></i></a>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+        <!--end::Tab pane-->
+    </div>
+    <!--end::Tab Content-->
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+{% block css %}
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+
+    <script>
+        var datatable = $('.kt_datatable').dataTable( {
+            ordering:  false,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
+            }
+        } );
+        var request_application_decline_modal;
+        function show_request_application_decline_modal(id) {
+            request_application_decline_modal.show();
+            let myForm = $('#request_application_decline_form');
+            myForm.attr('action', "/adminpanel/campaign_action/"+id + "/" + 3 + "/");
+
+            return false;
+        }
+
+        var request_application_approve_modal;
+        function show_request_application_approve_modal(id) {
+            request_application_approve_modal.show();
+            let myForm = $('#request_application_approve_modal_form');
+            myForm.attr('action', "/adminpanel/campaign_action/"+id + "/" + 2 + "/");
+
+            return false;
+        }
+
+        function approve_form(id) {
+            $.get( "/adminpanel/campaign_action/"+id + "/" + 2, function( data ) {
+                if (data === "ok") {
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+        function decline_form(id) {
+            $.post( "/adminpanel/campaign_action/"+id + "/" + 3, function( data ) {
+                if (data === "ok") {
+                    request_application_decline_modal.hide();
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+
+        $(document).ready(function() {
+            request_application_decline_modal = new bootstrap.Modal(document.getElementById('request_application_decline_modal'))
+            request_application_approve_modal = new bootstrap.Modal(document.getElementById('request_application_approve_modal'))
+        });
+    </script>
+{% endblock javascript %}

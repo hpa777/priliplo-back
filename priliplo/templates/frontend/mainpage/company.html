@@ -1,0 +1,107 @@
+{% load thumbnail %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<!--begin::Head-->
+{% include "frontend/layout/header.html" %}
+<!--end::Head-->
+
+<!--begin::Body-->
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled">
+
+
+<!--begin::Main-->
+<!--begin::Root-->
+<div class="d-flex flex-column flex-root">
+    <!--begin::Page-->
+    <div class="page d-flex flex-row flex-column-fluid">
+        <!--begin::Wrapper-->
+        <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+
+            {% include "frontend/layout/header/_base.html" %}
+
+
+            <div class="separator border-gray-400 mb-10"></div>
+
+            <!--begin::Container-->
+            <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+                <!--begin::Post-->
+                <div class="content flex-row-fluid" id="kt_content">
+
+                    {% include "frontend/layout/header/_breadcrumbs.html" %}
+
+                    <!--begin::Row-->
+                    <div class="row gy-0 gx-10">
+                        <div class="col-lg-12">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center mb-1">
+                                    <h1 class="text-gray-800 fw-bolder me-3">{{ title_1 }}</h1>
+                                    <span class="badge badge-primary mb-1">{{object.business_type}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card mb-8">
+                        <div class="card-body pt-9 pb-0">
+                            <!--begin::Details-->
+                            <div class="d-flex flex-wrap flex-sm-nowrap mb-6">
+                                <!--begin::Image-->
+                                <div class="d-flex flex-center flex-shrink-0 bg-light rounded w-100px h-100px w-lg-150px h-lg-150px me-7 mb-4">
+                                    {% thumbnail object.company_logo "150x150" as im %}
+                                        <img class="mw-50px mw-lg-150px" src="{{ im.url }}" alt="{{object.company_name}}" />
+                                    {% endthumbnail %}
+                                </div>
+                                <!--end::Image-->
+                                <!--begin::Wrapper-->
+                                <div class="flex-grow-1">
+                                    <!--begin::Head-->
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                                        <!--begin::Details-->
+                                        <div class="d-flex flex-column">
+                                            <!--begin::Description-->
+                                            <div class="d-flex flex-wrap fw-bold mb-4 fs-5 text-gray-600">{{object.company_description|linebreaksbr}}</div>
+                                            <!--end::Description-->
+                                        </div>
+                                        <!--end::Details-->
+                                    </div>
+                                    <!--end::Head-->
+
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+                            <!--end::Details-->
+                        </div>
+                    </div>
+
+                    <div class="text-center mb-12">
+                        <!--begin::Title-->
+                        <div class="separator separator-dotted separator-content border-dark my-15"><span class="h1 col-2">Акции компании</span></div>
+                        <!--end::Title-->
+                    </div>
+
+                    <!-- Список акций -->
+                    {% include "frontend/partials/widgets-2/general/_widget-campaigns.html" %}
+                    <!-- < Список акций -->
+                </div>
+                <!--end::Post-->
+            </div>
+            <!--end::Container-->
+
+            {% include "frontend/layout/_footer.html" %}
+
+        </div>
+        <!--end::Wrapper-->
+    </div>
+    <!--end::Page-->
+</div>
+<!--end::Root-->
+<!--end::Main-->
+
+{% include "frontend/partials/_scrolltop.html" %}
+{% include "frontend/layout/_javascript.html" %}
+
+</body>
+<!--end::Body-->
+</html>

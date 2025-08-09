@@ -1,0 +1,111 @@
+							
+							<!--begin::Topbar-->
+							<div class="d-flex align-items-center flex-shrink-0">
+
+{% include "frontend/partials/search/_inline.html" %}
+
+
+								<!--begin::User-->
+								<div class="d-flex align-items-center ms-3 ms-lg-4" id="kt_header_user_menu_toggle">
+									<!--begin::Menu- wrapper-->
+                                    {% if user_profile %}
+                                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                                data-kt-menu-trigger="click"
+                                                data-kt-menu-placement="bottom-end">
+                                            {% if user_profile.user_role == 1 %}
+                                                <span class="d-none d-lg-inline">{{ user_profile.get_full_name }}</span>
+                                                <span class="d-lg-none">{{ user_profile.get_full_name.0 }}</span>
+                                            {% elif user_profile.user_role == 2 %}
+                                                <span class="d-none d-lg-inline">{{ user_profile.get_full_name }}</span>
+                                                <span class="d-lg-none">{{ user_profile.get_full_name.0 }}</span>
+                                            {% elif user_profile.user_role == 3 %}
+                                                <span class="d-none d-lg-inline">{{ company_profile.company_name }}</span>
+                                                <span class="d-lg-none">{{ company_profile.company_name.0 }}</span>
+                                            {% elif user_profile.user_role == 4 %}
+                                                <span class="d-none d-lg-inline">{{ user_profile.get_full_name }}</span>
+                                                <span class="d-lg-none">{{ user_profile.get_full_name.0 }}</span>
+                                            {% endif %}
+                                        </button>
+
+                                        <!--begin::Menu-->
+                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-warning fw-bold fs-7 w-200px py-4"
+                                             data-kt-menu="true">
+                                            <!--begin::Menu item-->
+                                            <div class="menu-item px-3">
+                                                <div class="menu-content d-flex align-items-center px-3">
+                                                    {% if user_profile.user_role == 1 %}
+                                                        <div class="">
+                                                            <div class="badge badge-light-success fw-bolder">Администратор</div>
+                                                            <div class="fw-bolder">{{ user_profile.get_full_name }}
+                                                            </div>
+                                                            <a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{ request.user.username }}</a>
+                                                        </div>
+                                                    {% elif user_profile.user_role == 2 %}
+                                                        <div class="">
+                                                            <div class="badge badge-light-success fw-bolder">Клиент</div>
+                                                            <div class="fw-bolder">{{ user_profile.get_full_name }}
+                                                            </div>
+                                                            <a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{ request.user.username }}</a>
+                                                        </div>
+                                                    {% elif user_profile.user_role == 3 %}
+                                                        <div class="">
+                                                            <div class="badge badge-light-success fw-bolder">Рекламодатель</div>
+                                                            <div class="fw-bolder">{{ company_profile.get_full_company_fio }}
+                                                            </div>
+                                                            <a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{ request.user.username }}</a>
+                                                        </div>
+                                                    {% elif user_profile.user_role == 4 %}
+                                                        <div class="">
+                                                            <div class="badge badge-light-success fw-bolder">Кассир</div>
+                                                            <div class="fw-bolder">{{ kassir_profile }}
+                                                            </div>
+                                                            <a href="#" class="fw-bold text-muted text-hover-primary fs-7">{{ request.user.username }}</a>
+                                                        </div>
+                                                    {% endif %}
+                                                    <!--end::Username-->
+                                                </div>
+                                            </div>
+                                            <!--end::Menu item-->
+                                            <!--begin::Menu separator-->
+                                            <div class="separator my-2"></div>
+                                            <!--end::Menu separator-->
+                                            <!--begin::Menu item-->
+                                            <div class="menu-item px-1">
+
+                                                {% if user_profile.user_role == 1 %}
+                                                    <a href="{% url 'client:clientmainpage' %}" class="menu-link px-5">Кабинет</a>
+                                                {% elif user_profile.user_role == 2 %}
+                                                    <a href="{% url 'client:clientmainpage' %}" class="menu-link px-5">Кабинет</a>
+                                                {% elif user_profile.user_role == 3 %}
+                                                    <a href="{% url 'company:companymainpage' %}" class="menu-link px-5">Кабинет</a>
+                                                {% endif %}
+
+                                            </div>
+                                            <!--end::Menu item-->
+
+                                            <!--begin::Menu item-->
+                                            <div class="menu-item px-1">
+                                                <a href="/login_out/" class="menu-link px-5">Выход</a>
+                                            </div>
+                                            <!--end::Menu item-->
+                                        </div>
+                                        <!--end::Menu-->
+                                    {% else %}
+                                        <!--begin::User icon(remove this button to use user avatar as menu toggle)-->
+                                        <a href="/login/" class="btn btn-primary h-lg-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+                                            <i class="fas fa-user fs-4 me-2"></i>
+                                            Войти
+                                        </a>
+                                        <!--end::User icon-->
+                                    {% endif %}
+
+
+									<!--end::Menu wrapper-->
+								</div>
+								<!--end::User -->
+
+								<!--begin::Sidebar Toggler-->
+								<!--end::Sidebar Toggler-->
+							</div>
+							<!--end::Topbar-->
+

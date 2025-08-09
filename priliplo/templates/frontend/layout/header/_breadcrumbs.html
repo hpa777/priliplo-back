@@ -1,0 +1,28 @@
+                                    <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+                                        <!--begin::Item-->
+                                        <li class="breadcrumb-item text-muted">
+                                            <a href="/" class="text-muted text-hover-primary">Главная</a>
+                                        </li>
+                                        <!--end::Item-->
+
+                                        {% for breadcrumb in breadcrumbs %}
+                                            <!--begin::Item-->
+                                            <li class="breadcrumb-item">
+                                                <span class="bullet bg-gray-300 w-5px h-2px"></span>
+                                            </li>
+                                            <!--end::Item-->
+                                            <!--begin::Item-->
+                                            <li class="breadcrumb-item text-muted"><a class="text-muted text-hover-primary" href="{{ breadcrumb.url }}">{{ breadcrumb.text }}</a></li>
+                                            <!--end::Item-->
+                                        {% endfor %}
+
+                                        <!--begin::Item-->
+                                        <li class="breadcrumb-item">
+                                            <span class="bullet bg-gray-300 w-5px h-2px"></span>
+                                        </li>
+                                        <!--end::Item-->
+                                        <!--begin::Item-->
+                                        <li class="breadcrumb-item text-muted">{{ title_2 }}</li>
+                                        <!--end::Item-->
+
+                                    </ul>

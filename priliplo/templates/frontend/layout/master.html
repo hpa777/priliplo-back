@@ -1,0 +1,60 @@
+		
+		<!--begin::Main-->
+		<!--begin::Root-->
+		<div class="d-flex flex-column flex-root">
+			<!--begin::Page-->
+			<div class="page d-flex flex-row flex-column-fluid">
+				<!--begin::Wrapper-->
+				<div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+
+{% include "frontend/layout/header/_base.html" %}
+
+
+{% include "frontend/layout/_toolbar.html" %}
+
+					<!--begin::Container-->
+					<div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+						<!--begin::Post-->
+						<div class="content flex-row-fluid" id="kt_content">
+							
+							<!--begin::Row-->
+							<div class="row gy-0 gx-10">
+								<!--begin::Col-->
+								<div class="col-xl-12">
+
+<!-- Список акций -->
+{% include "frontend/partials/widgets-2/general/_widget-campaigns-block.html" %}
+<!-- < Список акций -->
+
+<!-- Список компаний -->
+{% include "frontend/partials/widgets-2/general/_widget-companies.html" %}
+<!-- < Список компаний -->
+
+<!-- Описание -->
+{% include "frontend/partials/widgets-2/general/_widget-about.html" %}
+<!-- < Описание -->
+
+
+
+
+								</div>
+								<!--end::Col-->
+							</div>
+							<!--end::Row-->
+							
+						</div>
+						<!--end::Post-->
+					</div>
+					<!--end::Container-->
+
+{% include "frontend/layout/_footer.html" %}
+
+				</div>
+				<!--end::Wrapper-->
+			</div>
+			<!--end::Page-->
+		</div>
+		<!--end::Root-->
+
+		<!--end::Main-->
+		

@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load pluralize %}
+
+{% block title %}Кабинет рекламодателя{% endblock title %}
+
+{% block content %}
+<div class="row gy-5 gx-xl-8">
+    <div class="col-xl-12">
+
+<!--begin::Tables Widget 5-->
+<div class="card card-xxl-stretch mb-5 mb-xxl-8">
+    <!--begin::Header-->
+    <div class="card-header border-0 pt-5">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="card-label fw-bolder fs-3 mb-1">Список акций</span>
+        </h3>
+        <a href="#"  onclick="if (check_filled_profile()) { top.location.href='{% url 'company:create_campaign_wizard' %}'; return false;} else return false;" class="btn btn-primary align-self-center">Создать акцию</a>
+    </div>
+    <!--end::Header-->
+    <!--begin::Body-->
+
+    {% if declined_applications.count > 0 %}
+        <div class="alert alert-warning d-flex align-items-center p-5 mb-10">
+                    <span class="svg-icon svg-icon-2hx svg-icon-warning me-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"></rect>
+                                <path d="M4,4 L11.6314229,2.5691082 C11.8750185,2.52343403 12.1249815,2.52343403 12.3685771,2.5691082 L20,4 L20,13.2830094 C20,16.2173861 18.4883464,18.9447835 16,20.5 L12.5299989,22.6687507 C12.2057287,22.8714196 11.7942713,22.8714196 11.4700011,22.6687507 L8,20.5 C5.51165358,18.9447835 4,16.2173861 4,13.2830094 L4,4 Z" fill="#000000" opacity="0.3"></path>
+                                <path d="M11.1750002,14.75 C10.9354169,14.75 10.6958335,14.6541667 10.5041669,14.4625 L8.58750019,12.5458333 C8.20416686,12.1625 8.20416686,11.5875 8.58750019,11.2041667 C8.97083352,10.8208333 9.59375019,10.8208333 9.92916686,11.2041667 L11.1750002,12.45 L14.3375002,9.2875 C14.7208335,8.90416667 15.2958335,8.90416667 15.6791669,9.2875 C16.0625002,9.67083333 16.0625002,10.2458333 15.6791669,10.6291667 L11.8458335,14.4625 C11.6541669,14.6541667 11.4145835,14.75 11.1750002,14.75 Z" fill="#000000"></path>
+                            </g>
+                        </svg>
+                    </span>
+            <div class="d-flex flex-column">
+                <h5 class="mb-1">Удалите отклоненную акцию и создайте новую акцию, учитывая недостатки, описанные в блоке причина отказа. После удаления акции деньги вернуться на основной баланс.</h5>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card-body py-3">
+        <div class="tab-content">
+            <div class="table-responsive">
+                <!--begin::Table-->
+                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4">
+                    <!--begin::Table head-->
+                    <thead>
+                    <tr class="border-0">
+                        <th class="p-0 w-50px"></th>
+                        <th class="p-0 min-w-150px">Название</th>
+                        <th class="p-0 min-w-140px text-end">Окончание приема заявок </th>
+                        <th class="p-0 min-w-110px text-center">Статус</th>
+                        <th class="p-0 min-w-50px text-end" style="padding-right: 0.85em !important;">Сводка</th>
+                    </tr>
+                    </thead>
+                    <!--end::Table head-->
+                    <!--begin::Table body-->
+                    <tbody>
+
+                    {% for campaign in campaigns %}
+                    <tr>
+                        <td>
+                            <div class="symbol symbol-45px me-2">
+                                <span class="symbol-label">
+                                    {% thumbnail campaign.campaign_image "200x200" crop="center" as im %}
+                                        <img src="{{ im.url }}" class="h-100 align-self-center" alt="" >
+                                    {% endthumbnail %}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="/company/campaign_desc/{{campaign.pk}}/" class="text-dark fw-bolder text-hover-primary mb-1 fs-6">{{campaign.title}}</a>
+                        </td>
+                        <td class="text-end text-muted fw-bold">{{ campaign.end_date|date:"d E Y" }}</td>
+                        <td class="text-center">
+                            <span class="badge {% if campaign.campaign_status == 1 %}badge-light-primary{% elif campaign.campaign_status == 2 %}badge-light-success{% elif campaign.campaign_status == 3 %}badge-light-danger{% elif campaign.campaign_status == 4 %}badge-secondary{% elif campaign.campaign_status == 5 %}badge-light{% endif %}">
+                                {{ campaign.get_campaign_status_display }}
+                            </span>
+                            {% now "Y-m-d" as todays_date %}
+                            {% if campaign.campaign_status == 2 and todays_date > campaign.end_date|date:"Y-m-d" %}
+                                <br><span class="text-muted">Заявки не принимаются</span>
+                            {% endif %}
+                            {% if campaign.campaign_status == 3 %}
+                                <br><button class="btn btn-sm btn-active-light-info" data-bs-toggle="popover" data-bs-dismiss="true" data-bs-placement="top" title="Причина отказа" data-bs-content="{{ campaign.admin_comment }}">Причина отказа</button>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <span class="badge badge-light-success">{{ campaign.active_applications_count }} {{ campaign.active_applications_count|rupluralize:"участник,участника,участников" }}</span><br>
+                            <span class="badge badge-light-warning">{{ campaign.request_applications_count }} {{ campaign.request_applications_count|rupluralize:"запрос,запроса,запросов" }}</span><br>
+                            <span class="badge badge-light-primary">{{ campaign.sticker_applications_count }} на оклейке</span>
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url "company:edit_campaign" campaign.pk %}" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary">
+                                <i class="far fa-edit"></i>
+                            </a>
+                            {% if campaign.active_applications_count == 0 and campaign.sticker_applications_count == 0 and campaign.finished_applications_count > 0 %}
+                            <a class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary cursor-pointer" title="Остановить акцию досрочно" onclick='show_confirm_message ("Вы действительно хотите остановить акцию?", "Да, остановить", "Отмена", "{% url "company:archive_campaign" campaign.pk %}"); return false;'>
+                                <i class="fas fa-archive"></i>
+                            </a>
+                            {% endif %}
+                            {% if campaign.active_applications_count == 0 and campaign.sticker_applications_count == 0 and campaign.finished_applications_count == 0 %}
+                            <a class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary cursor-pointer" onclick='show_confirm_message ("Вы действительно хотите удалить акцию?", "Да, удалить", "Отмена", "{% url "company:remove_campaign" campaign.pk %}"); return false;'>
+                                <i class="far fa-trash-alt"></i>
+                            </a>
+                            {% endif %}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                    <!--end::Table body-->
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--end::Body-->
+</div>
+<!--end::Tables Widget 5-->
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+    <script>
+        function check_filled_profile () {
+            {% if not company_profile.profile_filled %}
+                Swal.fire({
+                    html: "Чтобы создать акцию нужно рассказать побольше о своей компании. Сделайте это в разделе <a href='{% url 'company:user_data' %}'>Профиль</a> и возвращайтесь, когда все будет готово.",
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "OK",
+                    customClass: {
+                        confirmButton: "btn btn-primary"
+                    }
+                });
+                return false;
+            {% else %}
+                return true;
+            {% endif %}
+        }
+    </script>
+{% endblock javascript %}

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Список задач{% endblock title %}
+
+
+{% block content %}
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-1 mb-xxl-1">
+                <!--begin::Header-->
+                <div class="card-header border-0 pt-5">
+                    <h3 class="card-title align-items-start flex-column">
+
+                    </h3>
+                    <a href="{% url "adminpanel:create_task_group" %}" class="btn btn-primary align-self-center">Создать группу задач</a>
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-sm table-striped table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 min-w-250px ">Группа</th>
+                                        <th class="p-0 w-150px">&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for company_task in object_list %}
+                                        <tr>
+                                            <td class=" ">
+                                                {{ company_task.title }}
+                                            </td>
+
+                                            <td class="text-end">
+                                                      <a class="btn btn-warning btn-sm btn-icon cursor-pointer dropdown-item" href="{% url "adminpanel:edit_task_group" company_task.pk %}" title="Редактировать"><i class="fas fa-edit"></i></a>
+                                                      <a class="btn btn-danger btn-sm btn-icon cursor-pointer dropdown-item cursor-pointer" onclick="delete_task('{{company_task.pk}}')" title="Удалить"><i class="fas fa-trash"></i></a>
+<!--                                                    <a class="btn btn-success btn-sm btn-icon cursor-pointer" onclick="archive_task('{{company_task.pk}}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Завершить задачу"><i class="fas fa-check fs-4"></i></a>-->
+                                            </td>
+
+
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+        <!--end::Tab pane-->
+    </div>
+    <!--end::Tab Content-->
+{% endblock content %}
+
+{% block css %}
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+
+    <script>
+        var datatable = $('.kt_datatable').dataTable( {
+            ordering:  false,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
+            }
+        } );
+        var request_application_decline_modal;
+
+
+        function delete_task(id) {
+            Swal.fire({
+                text: "Вы действительно хотите удалить группу" +  "?",
+                icon: "warning",
+                showCancelButton: true,
+                buttonsStyling: false,
+                confirmButtonText: "Да удалить!",
+                cancelButtonText: "Нет, не удалять",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-danger",
+                    cancelButton: "btn fw-bold btn-active-light-primary"
+                }
+            }).then(function (result) {
+                if (result.value) {
+                    $.get( "/adminpanel/remove_task_group/"+id, function( data ) {
+                        if (data === "ok") {
+                            top.location.href = top.location.href;
+                        } else {
+                            alert( data );
+                        }
+                    });
+                    return false;
+                }
+            });
+        }
+
+        $(document).ready(function() {
+        });
+    </script>
+{% endblock javascript %}

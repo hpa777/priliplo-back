@@ -1,0 +1,71 @@
+{% load thumbnail %}
+
+        <!--begin::Row-->
+        <div class="row g-10">
+
+            {% for campaign in pageobjects.campaigns %}
+                <!--begin::Col-->
+                <div class="col-md-4">
+                    <!--begin::Publications post-->
+                    <div class="card-xl-stretch me-md-6 mb-15 ribbon ribbon-top">
+                        <div class="ribbon-label score">
+                             {{ campaign.award }} баллов
+                        </div>
+
+                        <!--begin::Overlay-->
+                        <a class="d-block overlay mb-4" href="{% url 'main_campaign_desc' campaign.pk %}">
+                            {% thumbnail campaign.campaign_image "400" as im %}
+                                <!--begin::Image-->
+                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('{{ im.url }}')"></div>
+                                <!--end::Image-->
+                            {% endthumbnail %}
+
+                        </a>
+                        <!--end::Overlay-->
+                        <!--begin::Body-->
+                        <div class="m-0">
+
+                            <!--begin::Title-->
+                            <a href="{% url 'main_campaign_desc' campaign.pk %}" class="fs-4 text-dark fw-bolder text-hover-primary text-dark lh-base">
+                                {{ campaign.title }}
+                            </a>
+                            <!--end::Title-->
+                            <!--begin::Text-->
+                            <div class="fw-bold fs-5 text-gray-600 text-dark mb-3">
+                                {{ campaign.advertiser }}
+                            </div>
+                            <!--end::Text-->
+                            <!--begin::Content-->
+                            <div class="fs-6 fw-bolder">
+                                <!--begin::Date-->
+                                <span class="badge badge-warning">Заявки принимаются до {{ campaign.end_date|date:"d E Y" }}</span>
+                                <!--end::Date-->
+                            </div>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Body-->
+                    </div>
+                    <!--end::Publications post-->
+                </div>
+                <!--end::Col-->
+
+                {% if forloop.counter|divisibleby:3 %}
+                    </div>
+                    {% if mainpage %}
+                        <div class="row g-10 d-none d-lg-flex">
+                    {% else %}
+                        <div class="row g-10">
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        {% if mainpage %}
+            <div class="row d-lg-none">
+                <div class="col-12 align-items-center d-flex flex-column justify-content-center align-items-center text-center">
+                    <a class="btn btn-light btn-lg btn-hover-scale text-center" href="{% url 'campaigns_list' %}">Все акции</a>
+                </div>
+            </div>
+        {% endif %}
+        <!--end::Row-->

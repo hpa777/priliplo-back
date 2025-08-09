@@ -1,0 +1,1134 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать акцию{% endblock title %}
+
+{% block content %}
+<!--begin::Basic info-->
+<div class="card mb-5 mb-xl-10">
+    <!--begin::Card header-->
+    <div class="card-header border-0 "  data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+        <!--begin::Card title-->
+        <div class="card-title m-0">
+            <h3 class="fw-bolder m-0">Информация об акции</h3>
+        </div>
+        <!--end::Card title-->
+    </div>
+    <!--begin::Card header-->
+
+
+
+
+
+
+
+    <div id="kt_content_container" class="container">
+
+
+
+
+
+
+
+
+
+        <!--begin::Stepper-->
+        <div class="stepper stepper-pills stepper-column d-flex flex-column flex-lg-row" id="kt_create_account_stepper">
+            <!--begin::Aside-->
+            <div class="d-flex flex-row-auto w-100 w-lg-300px">
+                <!--begin::Nav-->
+                <div class="stepper-nav flex-cente">
+                    <!--begin::Step 1-->
+                    <div class="stepper-item me-5 current" data-kt-stepper-element="nav">
+                        <!--begin::Line-->
+                        <div class="stepper-line w-40px"></div>
+                        <!--end::Line-->
+
+                        <!--begin::Icon-->
+                        <div class="stepper-icon w-40px h-40px">
+                            <i class="stepper-check fas fa-check"></i>
+                            <span class="stepper-number">1</span>
+                        </div>
+                        <!--end::Icon-->
+
+                        <!--begin::Label-->
+                        <div class="stepper-label">
+                            <h3 class="stepper-title">
+                                Расчет стоимости акции
+                            </h3>
+                        </div>
+                        <!--end::Label-->
+                    </div>
+                    <!--end::Step 1-->
+
+                    <!--begin::Step 2-->
+                    <div class="stepper-item me-5" data-kt-stepper-element="nav">
+                        <!--begin::Line-->
+                        <div class="stepper-line w-40px"></div>
+                        <!--end::Line-->
+
+                        <!--begin::Icon-->
+                        <div class="stepper-icon w-40px h-40px">
+                            <i class="stepper-check fas fa-check"></i>
+                            <span class="stepper-number">2</span>
+                        </div>
+                        <!--begin::Icon-->
+
+                        <!--begin::Label-->
+                        <div class="stepper-label">
+                            <h3 class="stepper-title">
+                                Описание акции
+                            </h3>
+                        </div>
+                        <!--end::Label-->
+                    </div>
+                    <!--end::Step 2-->
+
+                    <!--begin::Step 3-->
+                    <div class="stepper-item me-5" data-kt-stepper-element="nav">
+                        <!--begin::Line-->
+                        <div class="stepper-line w-40px"></div>
+                        <!--end::Line-->
+
+                        <!--begin::Icon-->
+                        <div class="stepper-icon w-40px h-40px">
+                            <i class="stepper-check fas fa-check"></i>
+                            <span class="stepper-number">3</span>
+                        </div>
+                        <!--begin::Icon-->
+
+                        <!--begin::Label-->
+                        <div class="stepper-label">
+                            <h3 class="stepper-title">
+                                Завершение создания акции
+                            </h3>
+
+                        </div>
+                        <!--end::Label-->
+                    </div>
+                    <!--end::Step 3-->
+
+                </div>
+                <!--end::Nav-->
+            </div>
+
+            <!--begin::Content-->
+            <div class="flex-row-fluid">
+                <!--begin::Form-->
+                <form id="create_campaign_form" class="form mx-auto" action="{% url "company:save_campaign_data" %}" method="post" novalidate="novalidate" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" id="advertiser_settings_sticking_cost" value="{{ advertiser_settings.sticking_cost }}">
+                    <input type="hidden" id="advertiser_settings_period_cost" value="{{ advertiser_settings.period_cost }}">
+                    <input type="hidden" id="advertiser_settings_logo_cost" value="{{ advertiser_settings.logo_cost }}">
+                    <input type="hidden" id="advertiser_balance" value="{{ advertiser.balance }}">
+                    <!--begin::Group-->
+                    <div class="mb-5">
+                        <!--begin::Step 1-->
+                        <div class="flex-column current" data-kt-stepper-element="content">
+
+                            <!--begin::Heading-->
+                            <div class="pb-10 pb-lg-15">
+                                <!--begin::Title-->
+                                <h2 class="fw-bolder d-flex align-items-center text-dark">Оценка стоимости акции</h2>
+                                <!--end::Title-->
+                                <!--begin::Notice-->
+                                <div class="text-gray-400 fw-bold fs-6">Если на счете недостаточно средств для создания акции, сначала вам нужно
+                                    <a href="{% url "company:select_payment" %}" class="link-primary fw-bolder">пополнить баланс</a>.</div>
+                                <!--end::Notice-->
+                            </div>
+                            <!--end::Heading-->
+
+                            <!--begin::Input group-->
+                            <div class="fv-row">
+                                <!--begin::Row-->
+                                <div class="row">
+                                    <!--begin::Col-->
+                                    <div class="col-12">
+                                        {#                                        {% if form_type == 'create' %}#}
+                                        <div class="row mb-6">
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">&nbsp;</label>
+                                            <div class="col-lg-8 fv-row">
+                                                Стоимость создания акции: <span class="campaign_cost">0.00</span> руб
+                                            </div>
+                                        </div>
+                                        {#                                        {% endif %}                                        #}
+
+
+                                        <!--begin::Input group-->
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Требуется автомобилей</label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <input type="number" name="quota" id="quota" class="form-control form-control-lg form-control-solid" placeholder="Укажите количество автомобилей" value="{{ form.data.quota }}" />
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+
+                                    </div>
+                                    <!--end::Col-->
+
+                                </div>
+                                <!--end::Row-->
+                            </div>
+                            <!--end::Input group-->
+
+                        </div>
+                        <!--begin::Step 1-->
+
+                        <!--begin::Step 2-->
+                        <div class="flex-column" data-kt-stepper-element="content">
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Название акции</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8 fv-row">
+                                    <input type="text" name="title" class="form-control form-control-lg form-control-solid" placeholder="Название акции" value="{{ form.data.title }}" />
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+                        
+                            <div class="row mb-6">
+
+                                <!--begin::Col-->
+
+                                <div class="col-lg-4 col-form-label required fw-bold fs-6">
+                                    Дата окончания приема заявок от участников
+                                    <br><small class="text-muted">Срок действия акции 84 дня с момента последней заявки</small>
+                                </div>
+
+                                <!--end::Col-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8 fv-row">
+                                    <div class="position-relative d-flex align-items-center">
+                                        <!--begin::Svg Icon | path: icons/duotone/Interface/Calendar.svg-->
+                                        <span class="svg-icon position-absolute ms-4 mb-1 svg-icon-2">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M6 3C6 2.44772 6.44772 2 7 2C7.55228 2 8 2.44772 8 3V4H16V3C16 2.44772 16.4477 2 17 2C17.5523 2 18 2.44772 18 3V4H19C20.6569 4 22 5.34315 22 7V19C22 20.6569 20.6569 22 19 22H5C3.34315 22 2 20.6569 2 19V7C2 5.34315 3.34315 4 5 4H6V3Z" fill="#191213" />
+																<path fill-rule="evenodd" clip-rule="evenodd" d="M10 12C9.44772 12 9 12.4477 9 13C9 13.5523 9.44772 14 10 14H17C17.5523 14 18 13.5523 18 13C18 12.4477 17.5523 12 17 12H10ZM7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18H13C13.5523 18 14 17.5523 14 17C14 16.4477 13.5523 16 13 16H7Z" fill="#121319" />
+															</svg>
+														</span>
+                                        <!--end::Svg Icon-->
+                                        <input class="form-control form-control-solid ps-12" name="end_date" placeholder="Выберите дату" value="{{ form.data.end_date }}" id="kt_datepicker_1" />
+                                    </div>
+                                </div>
+                                <!--begin::Col-->
+                            </div>
+                            <!--end::Row-->
+
+
+
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">
+                                    Бонусы за отчетный период
+                                    <br><small class="text-muted">Бонусы начисляются раз в 14 дней</small>
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8 fv-row">
+                                    <div class="input-group">
+                                        <input type="number" name="award" id="award" class="form-control form-control-lg form-control-solid" value="{{ form.data.award }}" placeholder="Сколько бонусов получит участник за 14 дней" />
+                                        <span class="input-group-text min-w-25" id="award_hint_text">0 бонусов за 84 дня </span>
+                                    </div>
+                                    <div class="text-center"><small>Сколько бонусов получит участник за 14 дней</small></div>
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+
+
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Текст наклейки</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8 fv-row">
+                                    <textarea class="form-control form-control-solid" rows="3" name="sticker_text" placeholder="Какая информация должна быть на наклейке" required>{{ form.data.sticker_text }}</textarea>
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Загрузите логотип</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8 fv-row">
+                                    <input type="file" name="logo_image" class="form-control form-control-lg form-control-solid" placeholder="Макет наклейки" required />
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+                            {% comment %}{% endif %}{% endcomment %}
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Условия участия в акции</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8 fv-row">
+                                    <textarea class="form-control form-control-solid" rows="3" name="short_description" placeholder="Требования для участников и подробные условия акции ">{{ form.data.short_description }}</textarea>
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="row mb-6">
+                                <!--begin::Label-->
+                                <label class="col-lg-4 col-form-label fw-bold fs-6">Макет наклейки</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-8">
+                                    <!--begin::Image input-->
+                                    <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-size: contain; background-position:center;background-image: url(/static/metronic/html/theme/demo1/dist/assets/media/svg/files/upload.svg)">
+                                        <!--begin::Preview existing avatar-->
+                                        <div class="image-input-wrapper w-250px h-125px" style="background-size: contain; background-position:center;"></div>
+                                        <!--end::Preview existing avatar-->
+                                        <!--begin::Label-->
+                                        <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Изменить фотографию">
+                                            <i class="bi bi-pencil-fill fs-7"></i>
+                                            <!--begin::Inputs-->
+                                            <input type="file" name="campaign_image" accept=".png, .jpg, .jpeg, .cdr, .svg, .eps, .pdf, .ai, .psd, .tiff" />
+                                            <input type="hidden" name="avatar_remove" />
+                                            <!--end::Inputs-->
+                                        </label>
+                                        <!--end::Label-->
+                                        <!--begin::Cancel-->
+                                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Отменить загрузку">
+																<i class="bi bi-x fs-2"></i>
+															</span>
+                                        <!--end::Cancel-->
+                                        <!--begin::Remove-->
+                                        <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Удалить фотографию">
+																<i class="bi bi-x fs-2"></i>
+															</span>
+                                        <!--end::Remove-->
+                                    </div>
+                                    <!--end::Image input-->
+                                    <!--begin::Hint-->
+                                    <div class="form-text"><small>Разрешенные типы файлов: png, jpg, jpeg, cdr, svg, eps, pdf, ai, psd, tiff.</small></div>
+                                    <!--end::Hint-->
+                                </div>
+                                <!--end::Col-->
+                            </div>
+                            <!--end::Input group-->
+
+
+
+                            {% if form_type == 'create' %}
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">&nbsp;</label>
+                                    <div class="col-lg-8 fv-row">
+                                        Стоимость создания акции: <span class="campaign_cost">0.00</span> руб
+                                    </div>
+                                </div>
+                            {% endif %}
+
+
+                        </div>
+                        <!--begin::Step 2-->
+
+
+                        <!--begin::Step 3-->
+                        <div class="flex-column" data-kt-stepper-element="content">
+                            <!--begin::Input group-->
+                            <div class="fv-row mb-10">
+                                <h3 class="text-center">Почти все готово!</h3>
+                                <h4 class="text-center">Нажмите "Сохранить" для создания акции</h4>
+                            </div>
+                            <!--end::Input group-->
+
+                        </div>
+                        <!--begin::Step 3-->
+                    </div>
+                    <!--end::Group-->
+
+                    <!--begin::Actions-->
+                    <div class="d-flex flex-stack">
+                        <!--begin::Wrapper-->
+                        <div class="me-2">
+                            <button type="button" class="btn btn-light btn-active-light-primary" data-kt-stepper-action="previous">
+                                Назад
+                            </button>
+                        </div>
+                        <!--end::Wrapper-->
+
+                        <!--begin::Wrapper-->
+                        <div>
+                            <button type="button" class="btn btn-primary" data-kt-stepper-action="submit">
+                        <span class="indicator-label">
+                            Сохранить
+                        </span>
+                                <span class="indicator-progress">
+                            Подождите... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                            </button>
+
+                            <button type="button" class="btn btn-primary" data-kt-stepper-action="next">
+                                Продолжить
+                            </button>
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::Actions-->
+                </form>
+                <!--end::Form-->
+            </div>
+        </div>
+        <!--end::Stepper-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %}
+
+        <!--begin::Stepper-->
+        <div class="stepper stepper-pills stepper-column d-flex flex-column flex-xl-row flex-row-fluid" id="">
+            <!--begin::Aside-->
+            <div class="card d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px w-xxl-400px me-9">
+                <!--begin::Wrapper-->
+                <div class="card-body px-6 px-lg-10 px-xxl-15 py-20">
+                    <!--begin::Nav-->
+                    <div class="stepper-nav">
+                        <!--begin::Step 1-->
+                        <div class="stepper-item current" data-kt-stepper-element="nav">
+                            <!--begin::Line-->
+                            <div class="stepper-line w-40px"></div>
+                            <!--end::Line-->
+                            <!--begin::Icon-->
+                            <div class="stepper-icon w-40px h-40px">
+                                <i class="stepper-check fas fa-check"></i>
+                                <span class="stepper-number">1</span>
+                            </div>
+                            <!--end::Icon-->
+                            <!--begin::Label-->
+                            <div class="stepper-label">
+                                <h3 class="stepper-title">Расчет стоимости акции</h3>
+                            </div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Step 1-->
+                        <!--begin::Step 2-->
+                        <div class="stepper-item" data-kt-stepper-element="nav">
+                            <!--begin::Line-->
+                            <div class="stepper-line w-40px"></div>
+                            <!--end::Line-->
+                            <!--begin::Icon-->
+                            <div class="stepper-icon w-40px h-40px">
+                                <i class="stepper-check fas fa-check"></i>
+                                <span class="stepper-number">2</span>
+                            </div>
+                            <!--end::Icon-->
+                            <!--begin::Label-->
+                            <div class="stepper-label">
+                                <h3 class="stepper-title">Account Settings</h3>
+                                <div class="stepper-desc fw-bold">Setup Your Account Settings</div>
+                            </div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Step 2-->
+                        <!--begin::Step 3-->
+                        <div class="stepper-item" data-kt-stepper-element="nav">
+                            <!--begin::Line-->
+                            <div class="stepper-line w-40px"></div>
+                            <!--end::Line-->
+                            <!--begin::Icon-->
+                            <div class="stepper-icon w-40px h-40px">
+                                <i class="stepper-check fas fa-check"></i>
+                                <span class="stepper-number">3</span>
+                            </div>
+                            <!--end::Icon-->
+                            <!--begin::Label-->
+                            <div class="stepper-label">
+                                <h3 class="stepper-title">Business Info</h3>
+                                <div class="stepper-desc fw-bold">Your Business Related Info</div>
+                            </div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Step 3-->
+                        <!--begin::Step 4-->
+                        <div class="stepper-item" data-kt-stepper-element="nav">
+                            <!--begin::Line-->
+                            <div class="stepper-line w-40px"></div>
+                            <!--end::Line-->
+                            <!--begin::Icon-->
+                            <div class="stepper-icon w-40px h-40px">
+                                <i class="stepper-check fas fa-check"></i>
+                                <span class="stepper-number">2</span>
+                            </div>
+                            <!--end::Icon-->
+                            <!--begin::Label-->
+                            <div class="stepper-label">
+                                <h3 class="stepper-title">Описание акции</h3>
+                            </div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Step 4-->
+                        <!--begin::Step 5-->
+                        <div class="stepper-item" data-kt-stepper-element="nav">
+                            <!--begin::Line-->
+                            <div class="stepper-line w-40px"></div>
+                            <!--end::Line-->
+                            <!--begin::Icon-->
+                            <div class="stepper-icon w-40px h-40px">
+                                <i class="stepper-check fas fa-check"></i>
+                                <span class="stepper-number">3</span>
+                            </div>
+                            <!--end::Icon-->
+                            <!--begin::Label-->
+                            <div class="stepper-label">
+                                <h3 class="stepper-title">Завершение создания акции</h3>
+                            </div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Step 5-->
+                    </div>
+                    <!--end::Nav-->
+                </div>
+                <!--end::Wrapper-->
+            </div>
+            <!--begin::Aside-->
+            <!--begin::Content-->
+            <div class="card d-flex flex-row-fluid flex-center">
+                <!--begin::Form-->
+
+
+                <form id="create_campaign_form" class="form" action="{% url "company:save_campaign_data" %}" method="post" class="card-body py-20 w-100 w-xl-700px px-9" novalidate="novalidate" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" id="advertiser_settings_sticking_cost" value="{{ advertiser_settings.sticking_cost }}">
+                    <input type="hidden" id="advertiser_settings_period_cost" value="{{ advertiser_settings.period_cost }}">
+                    <input type="hidden" id="advertiser_settings_logo_cost" value="{{ advertiser_settings.logo_cost }}">
+                    {% if form_type == 'edit' %}
+                        <input type="hidden" name="id" value="{{ obj_id }}">
+                    {% endif %}
+
+                    <!--begin::Step 1-->
+                    <div class="current" data-kt-stepper-element="content">
+                        <!--begin::Wrapper-->
+                        <div class="w-100">
+                            <!--begin::Heading-->
+                            <div class="pb-10 pb-lg-15">
+                                <!--begin::Title-->
+                                <h2 class="fw-bolder d-flex align-items-center text-dark">Оценка стоимости акции</h2>
+                                <!--end::Title-->
+                                <!--begin::Notice-->
+                                <div class="text-gray-400 fw-bold fs-6">Если на счете недостаточно средств для создания акции, сначала вам нужно
+                                    <a href="{% url "company:select_payment" %}" class="link-primary fw-bolder">пополнить баланс</a>.</div>
+                                <!--end::Notice-->
+                            </div>
+                            <!--end::Heading-->
+
+                            <!--begin::Input group-->
+                            <div class="fv-row">
+                                <!--begin::Row-->
+                                <div class="row">
+                                    <!--begin::Col-->
+                                    <div class="col-12">
+{#                                        {% if form_type == 'create' %}#}
+                                            <div class="row mb-6">
+                                                <label class="col-lg-4 col-form-label fw-bold fs-6">&nbsp;</label>
+                                                <div class="col-lg-8 fv-row">
+                                                    Стоимость создания акции: <span class="campaign_cost">0.00</span> руб
+                                                </div>
+                                            </div>
+{#                                        {% endif %}                                        #}
+
+
+                                        <!--begin::Input group-->
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Требуется автомобилей</label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <input type="number" name="quota" id="quota" class="form-control form-control-lg form-control-solid" placeholder="Укажите количество автомобилей" value="{{ form.data.quota }}" />
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Input group-->
+
+                                    </div>
+                                    <!--end::Col-->
+
+                                </div>
+                                <!--end::Row-->
+                            </div>
+                            <!--end::Input group-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::Step 1-->
+                    <!--begin::Step 2-->
+                    <div data-kt-stepper-element="content">
+                        <!--begin::Wrapper-->
+                        <div class="w-100">
+                            <!--begin::Heading-->
+                            <div class="pb-10 pb-lg-15">
+                                <!--begin::Title-->
+                                <h2 class="fw-bolder text-dark">Account Info</h2>
+                                <!--end::Title-->
+                                <!--begin::Notice-->
+                                <div class="text-gray-400 fw-bold fs-6">If you need more info, please check out
+                                    <a href="#" class="link-primary fw-bolder">Help Page</a>.</div>
+                                <!--end::Notice-->
+                            </div>
+                            <!--end::Heading-->
+                            <!--begin::Input group-->
+                            <div class="mb-10 fv-row">
+                                <!--begin::Label-->
+                                <label class="d-flex align-items-center form-label mb-3">Specify Team Size
+                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Provide your team size to help us setup your billing"></i></label>
+                                <!--end::Label-->
+                                <!--begin::Row-->
+                                <div class="row mb-2" data-kt-buttons="true">
+                                    <!--begin::Col-->
+                                    <div class="col">
+                                        <!--begin::Option-->
+                                        <label class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4">
+                                            <input type="radio" class="btn-check" name="account_team_size" value="1-1" />
+                                            <span class="fw-bolder fs-3">1-1</span>
+                                        </label>
+                                        <!--end::Option-->
+                                    </div>
+                                    <!--end::Col-->
+                                    <!--begin::Col-->
+                                    <div class="col">
+                                        <!--begin::Option-->
+                                        <label class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4 active">
+                                            <input type="radio" class="btn-check" name="account_team_size" checked="checked" value="2-10" />
+                                            <span class="fw-bolder fs-3">2-10</span>
+                                        </label>
+                                        <!--end::Option-->
+                                    </div>
+                                    <!--end::Col-->
+                                    <!--begin::Col-->
+                                    <div class="col">
+                                        <!--begin::Option-->
+                                        <label class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4">
+                                            <input type="radio" class="btn-check" name="account_team_size" value="10-50" />
+                                            <span class="fw-bolder fs-3">10-50</span>
+                                        </label>
+                                        <!--end::Option-->
+                                    </div>
+                                    <!--end::Col-->
+                                    <!--begin::Col-->
+                                    <div class="col">
+                                        <!--begin::Option-->
+                                        <label class="btn btn-outline btn-outline-dashed btn-outline-default w-100 p-4">
+                                            <input type="radio" class="btn-check" name="account_team_size" value="50+" />
+                                            <span class="fw-bolder fs-3">50+</span>
+                                        </label>
+                                        <!--end::Option-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Row-->
+                                <!--begin::Hint-->
+                                <div class="form-text">Customers will see this shortened version of your statement descriptor</div>
+                                <!--end::Hint-->
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="mb-10 fv-row">
+                                <!--begin::Label-->
+                                <label class="form-label mb-3">Team Account Name</label>
+                                <!--end::Label-->
+                                <!--begin::Input-->
+                                <input type="text" class="form-control form-control-lg form-control-solid" name="account_name" placeholder="" value="" />
+                                <!--end::Input-->
+                            </div>
+                            <!--end::Input group-->
+                            <!--begin::Input group-->
+                            <div class="mb-0 fv-row">
+                                <!--begin::Label-->
+                                <label class="d-flex align-items-center form-label mb-5">Select Account Plan
+                                    <i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Monthly billing will be based on your account plan"></i></label>
+                                <!--end::Label-->
+                                <!--begin::Options-->
+                                <div class="mb-0">
+                                    <!--begin:Option-->
+                                    <label class="d-flex flex-stack mb-5 cursor-pointer">
+                                        <!--begin:Label-->
+                                        <span class="d-flex align-items-center me-2">
+																	<!--begin::Icon-->
+																	<span class="symbol symbol-50px me-6">
+																		<span class="symbol-label">
+																			<!--begin::Svg Icon | path: icons/duotone/Interface/Bank.svg-->
+																			<span class="svg-icon svg-icon-1 svg-icon-gray-600">
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																					<path opacity="0.25" d="M4 10H8V17H10V10H14V17H16V10H20V17C21.1046 17 22 17.8954 22 19V20C22 21.1046 21.1046 22 20 22H4C2.89543 22 2 21.1046 2 20V19C2 17.8954 2.89543 17 4 17V10Z" fill="#12131A" />
+																					<path d="M2 7.35405C2 6.53624 2.4979 5.80083 3.25722 5.4971L11.2572 2.2971C11.734 2.10637 12.266 2.10637 12.7428 2.2971L20.7428 5.4971C21.5021 5.80083 22 6.53624 22 7.35405V7.99999C22 9.10456 21.1046 9.99999 20 9.99999H4C2.89543 9.99999 2 9.10456 2 7.99999V7.35405Z" fill="#12131A" />
+																				</svg>
+																			</span>
+                                                                            <!--end::Svg Icon-->
+																		</span>
+																	</span>
+                                            <!--end::Icon-->
+                                            <!--begin::Description-->
+																	<span class="d-flex flex-column">
+																		<span class="fw-bolder text-gray-800 text-hover-primary fs-5">Company Account</span>
+																		<span class="fs-6 fw-bold text-gray-400">Use images to enhance your post flow</span>
+																	</span>
+                                            <!--end:Description-->
+																</span>
+                                        <!--end:Label-->
+                                        <!--begin:Input-->
+                                        <span class="form-check form-check-custom form-check-solid">
+																	<input class="form-check-input" type="radio" name="account_plan" value="1" />
+																</span>
+                                        <!--end:Input-->
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--begin:Option-->
+                                    <label class="d-flex flex-stack mb-5 cursor-pointer">
+                                        <!--begin:Label-->
+                                        <span class="d-flex align-items-center me-2">
+																	<!--begin::Icon-->
+																	<span class="symbol symbol-50px me-6">
+																		<span class="symbol-label">
+																			<!--begin::Svg Icon | path: icons/duotone/Interface/Doughnut.svg-->
+																			<span class="svg-icon svg-icon-1 svg-icon-gray-600">
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																					<path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M11 4.25769C11 3.07501 9.9663 2.13515 8.84397 2.50814C4.86766 3.82961 2 7.57987 2 11.9999C2 13.6101 2.38057 15.1314 3.05667 16.4788C3.58731 17.5363 4.98303 17.6028 5.81966 16.7662L5.91302 16.6728C6.60358 15.9823 6.65613 14.9011 6.3341 13.9791C6.11766 13.3594 6 12.6934 6 11.9999C6 9.62064 7.38488 7.56483 9.39252 6.59458C10.2721 6.16952 11 5.36732 11 4.39046V4.25769ZM16.4787 20.9434C17.5362 20.4127 17.6027 19.017 16.7661 18.1804L16.6727 18.087C15.9822 17.3964 14.901 17.3439 13.979 17.6659C13.3594 17.8823 12.6934 17.9999 12 17.9999C11.3066 17.9999 10.6406 17.8823 10.021 17.6659C9.09899 17.3439 8.01784 17.3964 7.3273 18.087L7.23392 18.1804C6.39728 19.017 6.4638 20.4127 7.52133 20.9434C8.86866 21.6194 10.3899 21.9999 12 21.9999C13.6101 21.9999 15.1313 21.6194 16.4787 20.9434Z" fill="#12131A" />
+																					<path fill-rule="evenodd" clip-rule="evenodd" d="M13 4.39046C13 5.36732 13.7279 6.16952 14.6075 6.59458C16.6151 7.56483 18 9.62064 18 11.9999C18 12.6934 17.8823 13.3594 17.6659 13.9791C17.3439 14.9011 17.3964 15.9823 18.087 16.6728L18.1803 16.7662C19.017 17.6028 20.4127 17.5363 20.9433 16.4788C21.6194 15.1314 22 13.6101 22 11.9999C22 7.57987 19.1323 3.82961 15.156 2.50814C14.0337 2.13515 13 3.07501 13 4.25769V4.39046Z" fill="#12131A" />
+																				</svg>
+																			</span>
+                                                                            <!--end::Svg Icon-->
+																		</span>
+																	</span>
+                                            <!--end::Icon-->
+                                            <!--begin::Description-->
+																	<span class="d-flex flex-column">
+																		<span class="fw-bolder text-gray-800 text-hover-primary fs-5">Developer Account</span>
+																		<span class="fs-6 fw-bold text-gray-400">Use images to your post time</span>
+																	</span>
+                                            <!--end:Description-->
+																</span>
+                                        <!--end:Label-->
+                                        <!--begin:Input-->
+                                        <span class="form-check form-check-custom form-check-solid">
+																	<input class="form-check-input" type="radio" checked="checked" name="account_plan" value="2" />
+																</span>
+                                        <!--end:Input-->
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--begin:Option-->
+                                    <label class="d-flex flex-stack mb-0 cursor-pointer">
+                                        <!--begin:Label-->
+                                        <span class="d-flex align-items-center me-2">
+																	<!--begin::Icon-->
+																	<span class="symbol symbol-50px me-6">
+																		<span class="symbol-label">
+																			<!--begin::Svg Icon | path: icons/duotone/Interface/Line-03-Down.svg-->
+																			<span class="svg-icon svg-icon-1 svg-icon-gray-600">
+																				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																					<path opacity="0.25" d="M1 5C1 3.89543 1.89543 3 3 3H21C22.1046 3 23 3.89543 23 5V19C23 20.1046 22.1046 21 21 21H3C1.89543 21 1 20.1046 1 19V5Z" fill="#12131A" />
+																					<path fill-rule="evenodd" clip-rule="evenodd" d="M20.8682 17.5035C21.1422 17.9831 20.9756 18.5939 20.4961 18.8679C20.0166 19.1419 19.4058 18.9753 19.1317 18.4958L15.8834 12.8113C15.6612 12.4223 15.2073 12.2286 14.7727 12.3373L9.71238 13.6024C8.40847 13.9283 7.04688 13.3473 6.38005 12.1803L3.13174 6.49582C2.85773 6.0163 3.02433 5.40545 3.50385 5.13144C3.98337 4.85743 4.59422 5.02403 4.86823 5.50354L8.11653 11.1881C8.33881 11.5771 8.79268 11.7707 9.22731 11.6621L14.2876 10.397C15.5915 10.071 16.9531 10.6521 17.6199 11.819L20.8682 17.5035Z" fill="#12131A" />
+																				</svg>
+																			</span>
+                                                                            <!--end::Svg Icon-->
+																		</span>
+																	</span>
+                                            <!--end::Icon-->
+                                            <!--begin::Description-->
+																	<span class="d-flex flex-column">
+																		<span class="fw-bolder text-gray-800 text-hover-primary fs-5">Testing Account</span>
+																		<span class="fs-6 fw-bold text-gray-400">Use images to enhance time travel rivers</span>
+																	</span>
+                                            <!--end:Description-->
+																</span>
+                                        <!--end:Label-->
+                                        <!--begin:Input-->
+                                        <span class="form-check form-check-custom form-check-solid">
+																	<input class="form-check-input" type="radio" name="account_plan" value="3" />
+																</span>
+                                        <!--end:Input-->
+                                    </label>
+                                    <!--end::Option-->
+                                </div>
+                                <!--end::Options-->
+                            </div>
+                            <!--end::Input group-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::Step 2-->
+
+                    <!--begin::Step 3-->
+                    <div data-kt-stepper-element="content">
+                        <!--begin::Wrapper-->
+                        <div class="w-100">
+                            <!--begin::Heading-->
+                            <div class="pb-8 pb-lg-10">
+                                <!--begin::Title-->
+                                <h2 class="fw-bolder text-dark">Подтвердите создание акции!</h2>
+                                <!--end::Title-->
+                                <!--begin::Notice-->
+                                <div class="text-gray-400 fw-bold fs-6">If you need more info, please
+                                    <a href="#" class="link-primary fw-bolder">Sign In</a>.</div>
+                                <!--end::Notice-->
+                            </div>
+                            <!--end::Heading-->
+                            <!--begin::Body-->
+                            <div class="mb-0">
+                                <!--begin::Text-->
+                                <div class="fs-6 text-gray-600 mb-5">Writing headlines for blog posts is as much an art as it is a science and probably warrants its own post, but for all advise is with what works for your great &amp; amazing audience.</div>
+                                <!--end::Text-->
+                                <!--begin::Alert-->
+                                <!--begin::Notice-->
+                                <div class="notice d-flex bg-light-warning rounded border-warning border border-dashed p-6">
+                                    <!--begin::Icon-->
+                                    <!--begin::Svg Icon | path: icons/duotone/Code/Warning-1-circle.svg-->
+                                    <span class="svg-icon svg-icon-2tx svg-icon-warning me-4">
+																<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+																	<circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+																	<rect fill="#000000" x="11" y="7" width="2" height="8" rx="1" />
+																	<rect fill="#000000" x="11" y="16" width="2" height="2" rx="1" />
+																</svg>
+															</span>
+                                    <!--end::Svg Icon-->
+                                    <!--end::Icon-->
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-stack flex-grow-1">
+                                        <!--begin::Content-->
+                                        <div class="fw-bold">
+                                            <h4 class="text-gray-800 fw-bolder">We need your attention!</h4>
+                                            <div class="fs-6 text-gray-600">To start using great tools, please, please
+                                                <a href="#" class="fw-bolder">Create Team Platform</a></div>
+                                        </div>
+                                        <!--end::Content-->
+                                    </div>
+                                    <!--end::Wrapper-->
+                                </div>
+                                <!--end::Notice-->
+                                <!--end::Alert-->
+                            </div>
+                            <!--end::Body-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::Step 3-->
+                    <!--begin::Actions-->
+                    <div class="d-flex flex-stack pt-10">
+                        <!--begin::Wrapper-->
+                        <div class="mr-2">
+                            <button type="button" class="btn btn-lg btn-light-primary me-3" data-kt-stepper-action="previous">
+                                <!--begin::Svg Icon | path: icons/duotone/Navigation/Left-2.svg-->
+                                <span class="svg-icon svg-icon-4 me-1">
+														<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+															<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+																<polygon points="0 0 24 0 24 24 0 24" />
+																<rect fill="#000000" opacity="0.3" transform="translate(15.000000, 12.000000) scale(-1, 1) rotate(-90.000000) translate(-15.000000, -12.000000)" x="14" y="7" width="2" height="10" rx="1" />
+																<path d="M3.7071045,15.7071045 C3.3165802,16.0976288 2.68341522,16.0976288 2.29289093,15.7071045 C1.90236664,15.3165802 1.90236664,14.6834152 2.29289093,14.2928909 L8.29289093,8.29289093 C8.67146987,7.914312 9.28105631,7.90106637 9.67572234,8.26284357 L15.6757223,13.7628436 C16.0828413,14.136036 16.1103443,14.7686034 15.7371519,15.1757223 C15.3639594,15.5828413 14.7313921,15.6103443 14.3242731,15.2371519 L9.03007346,10.3841355 L3.7071045,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(9.000001, 11.999997) scale(-1, -1) rotate(90.000000) translate(-9.000001, -11.999997)" />
+															</g>
+														</svg>
+													</span>
+                                <!--end::Svg Icon-->Back</button>
+                        </div>
+                        <!--end::Wrapper-->
+                        <!--begin::Wrapper-->
+                        <div>
+                            <button type="button" class="btn btn-lg btn-primary me-3" data-kt-stepper-action="submit" id="create_campaign_form_submit">
+														<span class="indicator-label">Submit
+                                                            <!--begin::Svg Icon | path: icons/duotone/Navigation/Right-2.svg-->
+														<span class="svg-icon svg-icon-3 ms-2 me-0">
+															<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+																<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+																	<polygon points="0 0 24 0 24 24 0 24" />
+																	<rect fill="#000000" opacity="0.5" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000)" x="7.5" y="7.5" width="2" height="9" rx="1" />
+																	<path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)" />
+																</g>
+															</svg>
+														</span>
+                                                            <!--end::Svg Icon--></span>
+                                <span class="indicator-progress">Please wait...
+														<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                            <button type="button" class="btn btn-lg btn-primary" data-kt-stepper-action="next">Продолжить
+                                <!--begin::Svg Icon | path: icons/duotone/Navigation/Right-2.svg-->
+                                <span class="svg-icon svg-icon-4 ms-1 me-0">
+														<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+															<g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+																<polygon points="0 0 24 0 24 24 0 24" />
+																<rect fill="#000000" opacity="0.5" transform="translate(8.500000, 12.000000) rotate(-90.000000) translate(-8.500000, -12.000000)" x="7.5" y="7.5" width="2" height="9" rx="1" />
+																<path d="M9.70710318,15.7071045 C9.31657888,16.0976288 8.68341391,16.0976288 8.29288961,15.7071045 C7.90236532,15.3165802 7.90236532,14.6834152 8.29288961,14.2928909 L14.2928896,8.29289093 C14.6714686,7.914312 15.281055,7.90106637 15.675721,8.26284357 L21.675721,13.7628436 C22.08284,14.136036 22.1103429,14.7686034 21.7371505,15.1757223 C21.3639581,15.5828413 20.7313908,15.6103443 20.3242718,15.2371519 L15.0300721,10.3841355 L9.70710318,15.7071045 Z" fill="#000000" fill-rule="nonzero" transform="translate(14.999999, 11.999997) scale(1, -1) rotate(90.000000) translate(-14.999999, -11.999997)" />
+															</g>
+														</svg>
+													</span>
+                                <!--end::Svg Icon--></button>
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::Actions-->
+                </form>
+                <!--end::Form-->
+            </div>
+            <!--end::Content-->
+        </div>
+        <!--end::Stepper-->{% endcomment %}
+    </div>
+    </div>
+
+
+
+
+
+
+
+
+
+{% comment %}
+
+    <!--begin::Content-->
+    <div id="kt_account_profile_details" >
+        <!--begin::Form-->
+        <input type="hidden" id="advertiser_settings_sticking_cost" value="{{ advertiser_settings.sticking_cost }}">
+        <input type="hidden" id="advertiser_settings_period_cost" value="{{ advertiser_settings.period_cost }}">
+        <input type="hidden" id="advertiser_settings_logo_cost" value="{{ advertiser_settings.logo_cost }}">
+        <form id="create_campaign_form" class="form" action="{% url "company:save_campaign_data" %}" method="post"  enctype="multipart/form-data">
+            {% csrf_token %}
+            {% if form_type == 'edit' %}
+                <input type="hidden" name="id" value="{{ obj_id }}">
+            {% endif %}
+
+            <!--begin::Card body-->
+            <div class="card-body border-top p-9">
+
+                {% if form_type == 'create' %}
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">&nbsp;</label>
+                        <div class="col-lg-8 fv-row">
+                            Стоимость создания акции: <span class="campaign_cost">0.00</span> руб
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!--begin::Input group-->
+                <div class="row mb-6">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Название акции</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row">
+                        <input type="text" name="title" class="form-control form-control-lg form-control-solid" placeholder="Название акции" value="{{ form.data.title }}" />
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% if form_type == 'create' %}
+                <div class="row mb-6">
+                    <!--begin::Col-->
+
+                    <div class="col-lg-4 col-form-label required fw-bold fs-6">
+                        Дата окончания приема заявок от участников
+                        <br><small class="text-muted">Срок действия акции 84 дня с момента последней заявки</small>
+                    </div>
+
+                    <!--end::Col-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row">
+                        <div class="position-relative d-flex align-items-center">
+                            <!--begin::Svg Icon | path: icons/duotone/Interface/Calendar.svg-->
+                            <span class="svg-icon position-absolute ms-4 mb-1 svg-icon-2">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M6 3C6 2.44772 6.44772 2 7 2C7.55228 2 8 2.44772 8 3V4H16V3C16 2.44772 16.4477 2 17 2C17.5523 2 18 2.44772 18 3V4H19C20.6569 4 22 5.34315 22 7V19C22 20.6569 20.6569 22 19 22H5C3.34315 22 2 20.6569 2 19V7C2 5.34315 3.34315 4 5 4H6V3Z" fill="#191213" />
+																<path fill-rule="evenodd" clip-rule="evenodd" d="M10 12C9.44772 12 9 12.4477 9 13C9 13.5523 9.44772 14 10 14H17C17.5523 14 18 13.5523 18 13C18 12.4477 17.5523 12 17 12H10ZM7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18H13C13.5523 18 14 17.5523 14 17C14 16.4477 13.5523 16 13 16H7Z" fill="#121319" />
+															</svg>
+														</span>
+                            <!--end::Svg Icon-->
+                            <input class="form-control form-control-solid ps-12" name="end_date" placeholder="Выберите дату" value="{{ form.data.end_date }}" id="kt_datepicker_1" />
+                        </div>
+                    </div>
+                    <!--begin::Col-->
+                </div>
+                <!--end::Row-->
+
+                <!--begin::Input group-->
+                <div class="row mb-6">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Требуется автомобилей</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row">
+                        <input type="number" name="quota" id="quota" class="form-control form-control-lg form-control-solid" placeholder="Укажите количество автомобилей" value="{{ form.data.quota }}" />
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+
+                <!--begin::Input group-->
+                <div class="row mb-6">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">
+                        Бонусы за отчетный период
+                        <br><small class="text-muted">Бонусы начисляются раз в 14 дней</small>
+                    </label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row">
+                        <div class="input-group">
+                            <input type="number" name="award" id="award" class="form-control form-control-lg form-control-solid" value="{{ form.data.award }}" placeholder="Сколько бонусов получит участник за 14 дней" />
+                            <span class="input-group-text min-w-25" id="award_hint_text">0 бонусов за 84 дня </span>
+                        </div>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+
+
+                <!--begin::Input group-->
+                <div class="row mb-6">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Текст наклейки</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row">
+                        <textarea class="form-control form-control-solid" rows="3" name="sticker_text" placeholder="Какая информация должна быть на наклейке" required>{{ form.data.sticker_text }}</textarea>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+
+                <!--begin::Input group-->
+                <div class="row mb-6">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Загрузите логотип</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row">
+                        <input type="file" name="logo_image" class="form-control form-control-lg form-control-solid" placeholder="Макет наклейки" required />
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+{% endif %}
+                <!--begin::Input group-->
+                <div class="row mb-6">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Условия участия в акции</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row">
+                        <textarea class="form-control form-control-solid" rows="3" name="short_description" placeholder="Требования для участников и подробные условия акции ">{{ form.data.short_description }}</textarea>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+                <!--begin::Input group-->
+                <div class="row mb-6">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Макет наклейки</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8">
+                        <!--begin::Image input-->
+                        <div class="image-input image-input-outline image-input-empty" data-kt-image-input="true" style="background-size: contain; background-position:center;background-image: url(/static/metronic/html/theme/demo1/dist/assets/media/svg/files/upload.svg)">
+                            <!--begin::Preview existing avatar-->
+                            <div class="image-input-wrapper w-250px h-125px" style="background-size: contain; background-position:center;"></div>
+                            <!--end::Preview existing avatar-->
+                            <!--begin::Label-->
+                            <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Изменить фотографию">
+                                <i class="bi bi-pencil-fill fs-7"></i>
+                                <!--begin::Inputs-->
+                                <input type="file" name="campaign_image" accept=".png, .jpg, .jpeg, .cdr, .svg, .eps, .pdf, .ai, .psd, .tiff" />
+                                <input type="hidden" name="avatar_remove" />
+                                <!--end::Inputs-->
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Cancel-->
+                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Отменить загрузку">
+																<i class="bi bi-x fs-2"></i>
+															</span>
+                            <!--end::Cancel-->
+                            <!--begin::Remove-->
+                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Удалить фотографию">
+																<i class="bi bi-x fs-2"></i>
+															</span>
+                            <!--end::Remove-->
+                        </div>
+                        <!--end::Image input-->
+                        <!--begin::Hint-->
+                        <div class="form-text"><small>Разрешенные типы файлов: png, jpg, jpeg, cdr, svg, eps, pdf, ai, psd, tiff.</small></div>
+                        <!--end::Hint-->
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+
+
+
+                {% if form_type == 'create' %}
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">&nbsp;</label>
+                        <div class="col-lg-8 fv-row">
+                            Стоимость создания акции: <span class="campaign_cost">0.00</span> руб
+                        </div>
+                    </div>
+                {% endif %}
+
+
+            </div>
+            <!--end::Card body-->
+            <!--begin::Actions-->
+            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                <button type="reset" class="btn btn-white btn-active-light-primary me-2">Отмена</button>
+                <button type="submit" class="btn btn-primary" id="create_campaign_form_submit">Сохранить</button>
+            </div>
+            <!--end::Actions-->
+        </form>
+        <!--end::Form-->
+    </div>
+    <!--end::Content-->
+</div>{% endcomment %}
+<!--end::Basic info-->
+{% endblock content %}
+
+{% block javascript %}
+{% comment %}<script src="/static/metronic/html/theme/demo1/dist/assets/js/custom/priliplo/company/create_campaign.js"></script>{% endcomment %}
+<script src="/static/metronic/html/theme/demo1/src/js/custom/priliplo/company/create_campaign_temp.js"></script>
+{% endblock javascript %}

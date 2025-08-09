@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load pluralize %}
+
+{% block title %}Кабинет клиента{% endblock title %}
+
+{% block content %}
+<div class="row gy-5 gx-xl-8">
+    <div class="col-xl-12">
+        {% if messages %}
+            {% for message in messages %}
+
+            {% if message.tags == 'success' %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+
+            {% if message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if not advertisers_list %}
+
+        {% if active_applications %}
+            {% if active_applications.application_status == 3 %}
+                <div class="alert alert-warning d-flex align-items-center p-5 mb-10">
+                    <span class="svg-icon svg-icon-2hx svg-icon-warning me-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"></rect>
+                                <path d="M4,4 L11.6314229,2.5691082 C11.8750185,2.52343403 12.1249815,2.52343403 12.3685771,2.5691082 L20,4 L20,13.2830094 C20,16.2173861 18.4883464,18.9447835 16,20.5 L12.5299989,22.6687507 C12.2057287,22.8714196 11.7942713,22.8714196 11.4700011,22.6687507 L8,20.5 C5.51165358,18.9447835 4,16.2173861 4,13.2830094 L4,4 Z" fill="#000000" opacity="0.3"></path>
+                                <path d="M11.1750002,14.75 C10.9354169,14.75 10.6958335,14.6541667 10.5041669,14.4625 L8.58750019,12.5458333 C8.20416686,12.1625 8.20416686,11.5875 8.58750019,11.2041667 C8.97083352,10.8208333 9.59375019,10.8208333 9.92916686,11.2041667 L11.1750002,12.45 L14.3375002,9.2875 C14.7208335,8.90416667 15.2958335,8.90416667 15.6791669,9.2875 C16.0625002,9.67083333 16.0625002,10.2458333 15.6791669,10.6291667 L11.8458335,14.4625 C11.6541669,14.6541667 11.4145835,14.75 11.1750002,14.75 Z" fill="#000000"></path>
+                            </g>
+                        </svg>
+                    </span>
+                    <div class="d-flex flex-column">
+                        <h5 class="mb-1">Вам отказали в участии в акции <b>{{ active_applications.campaign.title }}</b> от компании <b><a href="{% url 'client:advertiser_desc' active_applications.campaign.advertiser.pk %}">{{ active_applications.campaign.advertiser.company_name }}</a></b></h5>
+                        <span>
+                            Причина отказа: {{ active_applications.description }}
+                        </span>
+                    </div>
+                </div>
+            {% elif active_applications.application_status == 5 %}
+                <div class="alert bg-danger d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                    <!--begin::Icon-->
+                    <!--begin::Svg Icon | path: icons/duotone/Interface/Comment.svg-->
+                    <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																<path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M5.69477 2.48932C4.00472 2.74648 2.66565 3.98488 2.37546 5.66957C2.17321 6.84372 2 8.33525 2 10C2 11.6647 2.17321 13.1563 2.37546 14.3304C2.62456 15.7766 3.64656 16.8939 5 17.344V20.7476C5 21.5219 5.84211 22.0024 6.50873 21.6085L12.6241 17.9949C14.8384 17.9586 16.8238 17.7361 18.3052 17.5107C19.9953 17.2535 21.3344 16.0151 21.6245 14.3304C21.8268 13.1563 22 11.6647 22 10C22 8.33525 21.8268 6.84372 21.6245 5.66957C21.3344 3.98488 19.9953 2.74648 18.3052 2.48932C16.6859 2.24293 14.4644 2 12 2C9.53559 2 7.31411 2.24293 5.69477 2.48932Z" fill="#191213"></path>
+																<path fill-rule="evenodd" clip-rule="evenodd" d="M7 7C6.44772 7 6 7.44772 6 8C6 8.55228 6.44772 9 7 9H17C17.5523 9 18 8.55228 18 8C18 7.44772 17.5523 7 17 7H7ZM7 11C6.44772 11 6 11.4477 6 12C6 12.5523 6.44772 13 7 13H11C11.5523 13 12 12.5523 12 12C12 11.4477 11.5523 11 11 11H7Z" fill="#121319"></path>
+															</svg>
+														</span>
+                    <!--end::Svg Icon-->
+                    <!--end::Icon-->
+                    <!--begin::Content-->
+                    <div class="d-flex flex-column text-light pe-0 pe-sm-10">
+                        <h5 class="mb-1">Вас приняли к участию в акции <b>{{ active_applications.campaign.title }}</b> от компании <b><a href="{% url 'client:advertiser_desc' active_applications.campaign.advertiser.pk %}" class="text-white">{{ active_applications.campaign.advertiser.company_name }}</a></b></h5>
+                        <span>
+                            Вам необходимо явиться на оклейку автомобиля. С вами свяжутся по телефону, указанному в профиле.<br>
+
+                        </span>
+                    </div>
+                    <!--end::Content-->
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if need_photoreport %}
+            <div class="alert bg-danger d-flex flex-column flex-sm-row w-100 p-5 mb-10">
+                <!--begin::Icon-->
+                <!--begin::Svg Icon | path: icons/duotone/Interface/Comment.svg-->
+                <span class="svg-icon svg-icon-2hx svg-icon-light me-4 mb-5 mb-sm-0">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                                    <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M5.69477 2.48932C4.00472 2.74648 2.66565 3.98488 2.37546 5.66957C2.17321 6.84372 2 8.33525 2 10C2 11.6647 2.17321 13.1563 2.37546 14.3304C2.62456 15.7766 3.64656 16.8939 5 17.344V20.7476C5 21.5219 5.84211 22.0024 6.50873 21.6085L12.6241 17.9949C14.8384 17.9586 16.8238 17.7361 18.3052 17.5107C19.9953 17.2535 21.3344 16.0151 21.6245 14.3304C21.8268 13.1563 22 11.6647 22 10C22 8.33525 21.8268 6.84372 21.6245 5.66957C21.3344 3.98488 19.9953 2.74648 18.3052 2.48932C16.6859 2.24293 14.4644 2 12 2C9.53559 2 7.31411 2.24293 5.69477 2.48932Z" fill="#191213"></path>
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7 7C6.44772 7 6 7.44772 6 8C6 8.55228 6.44772 9 7 9H17C17.5523 9 18 8.55228 18 8C18 7.44772 17.5523 7 17 7H7ZM7 11C6.44772 11 6 11.4477 6 12C6 12.5523 6.44772 13 7 13H11C11.5523 13 12 12.5523 12 12C12 11.4477 11.5523 11 11 11H7Z" fill="#121319"></path>
+                                                                </svg>
+                                                            </span>
+                <!--end::Svg Icon-->
+                <!--end::Icon-->
+                <!--begin::Content-->
+                <div class="d-flex flex-column text-light pe-0 pe-sm-10">
+                    <h5 class="mb-1">Вам необходимо отправить <b><a href="{% url 'client:photoreport' %}">отчет</a> для начисления бонусов.</b></h5>
+                    <span>
+                        <!--<small>{{ days_from_accept }}-{{ need_photoreport }}-</small>-->
+                        Вы участвуете в акции <b>{{ active_applications.campaign.title }}</b> от компании <b><a href="{% url 'client:advertiser_desc' active_applications.campaign.advertiser.pk %}" class="text-white">{{ active_applications.campaign.advertiser.company_name }}</a></b>. Для начисления бонусов за прошедший отчетный период вам необходимо отправить отчет на странице <b>"<a href="{% url 'client:photoreport' %}">Фотоотчет</a>"</b>.
+                    </span>
+                </div>
+                <!--end::Content-->
+            </div>
+        {% endif %}
+
+        <div class="notice d-flex bg-light-primary rounded border-primary border border-dashed mb-9 p-6">
+            <!--begin::Icon-->
+            <!--begin::Svg Icon | path: icons/duotone/Design/Select.svg-->
+            <span class="svg-icon svg-icon-2tx svg-icon-primary me-4">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+														<path d="M18.5,8 C17.1192881,8 16,6.88071187 16,5.5 C16,4.11928813 17.1192881,3 18.5,3 C19.8807119,3 21,4.11928813 21,5.5 C21,6.88071187 19.8807119,8 18.5,8 Z M18.5,21 C17.1192881,21 16,19.8807119 16,18.5 C16,17.1192881 17.1192881,16 18.5,16 C19.8807119,16 21,17.1192881 21,18.5 C21,19.8807119 19.8807119,21 18.5,21 Z M5.5,21 C4.11928813,21 3,19.8807119 3,18.5 C3,17.1192881 4.11928813,16 5.5,16 C6.88071187,16 8,17.1192881 8,18.5 C8,19.8807119 6.88071187,21 5.5,21 Z" fill="#000000" opacity="0.3"></path>
+														<path d="M5.5,8 C4.11928813,8 3,6.88071187 3,5.5 C3,4.11928813 4.11928813,3 5.5,3 C6.88071187,3 8,4.11928813 8,5.5 C8,6.88071187 6.88071187,8 5.5,8 Z M11,4 L13,4 C13.5522847,4 14,4.44771525 14,5 C14,5.55228475 13.5522847,6 13,6 L11,6 C10.4477153,6 10,5.55228475 10,5 C10,4.44771525 10.4477153,4 11,4 Z M11,18 L13,18 C13.5522847,18 14,18.4477153 14,19 C14,19.5522847 13.5522847,20 13,20 L11,20 C10.4477153,20 10,19.5522847 10,19 C10,18.4477153 10.4477153,18 11,18 Z M5,10 C5.55228475,10 6,10.4477153 6,11 L6,13 C6,13.5522847 5.55228475,14 5,14 C4.44771525,14 4,13.5522847 4,13 L4,11 C4,10.4477153 4.44771525,10 5,10 Z M19,10 C19.5522847,10 20,10.4477153 20,11 L20,13 C20,13.5522847 19.5522847,14 19,14 C18.4477153,14 18,13.5522847 18,13 L18,11 C18,10.4477153 18.4477153,10 19,10 Z" fill="#000000"></path>
+													</svg>
+												</span>
+            <!--end::Svg Icon-->
+            <!--end::Icon-->
+
+            <!--begin::Wrapper-->
+            <div class="d-flex flex-stack flex-grow-1">
+                <!--begin::Content-->
+                <div class="fw-bold">
+                    <div class="fs-6 text-gray-600">
+                        {% if active_applications %}
+                            {% if active_applications.application_status == 1 %}
+                                Ваша заявка на участии в акции <b>{{ active_applications.campaign.title }}</b> от компании <b><a href="{% url 'client:advertiser_desc' active_applications.campaign.advertiser.pk %}">{{ active_applications.campaign.advertiser.company_name }}</a></b> находится на одобрении рекламодателя. Ожидайте подтверждения.
+                            {% elif active_applications.application_status == 2 or active_applications.application_status == 5 %}
+                                Вы участвуете в акции <b>{{ active_applications.campaign.title }}</b> от компании <b>{{ active_applications.campaign.advertiser.company_name }}</b>. Не забывайте, что для участия в акции, вы обязаны <a href="{% url 'client:photoreport' %}">выкладывать отчет</a> 1 раз в 2 недели.
+                            {% else %}
+                                Вы не участвуете ни в одной акции. Для участия, выберите интересную вам акцию у любого из активных рекламодателей.
+                            {% endif %}
+                        {% else %}
+                            Вы не участвуете ни в одной акции. Для участия, выберите интересную вам акцию у любого из активных рекламодателей.
+                        {% endif %}
+                    </div>
+                </div>
+                <!--end::Content-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+
+
+
+        {% if active_applications %}
+            <div class="card mb-8">
+                <div class="card-body pt-5 pb-5 pb-0">
+                    <h3 class="fw-bolder me-5 my-1">График фотоотчетов</h3>
+                    <div id="kt_docs_vistimeline_basic"></div>
+                </div>
+                <!--end::Title-->
+            </div>
+            <!--end::Toolbar-->
+            <div class="separator border-4 my-10"></div>
+        {%  endif %}
+
+
+    {%  endif %}
+
+
+        <div class="card mb-8">
+            <div class="card-body pt-5 pb-5 pb-0">
+                <h3 class="fw-bolder me-5 my-1">Активные акции</h3>
+            </div>
+            <!--end::Title-->
+        </div>
+        <!--end::Toolbar-->
+
+            <div class="tab-content">
+                <!--begin::Tab pane-->
+                <div id="kt_project_users_card_pane" class="tab-pane fade show active">
+            <div class="row g-6 g-xl-9">
+            {% for advertiser in advertisers %}
+
+                {% if advertiser.campaigns_count > 0 %}
+                <!--begin::Col-->
+                <div class="col-md-6 col-xxl-4">
+                    <!--begin::Card-->
+                    <div class="card ribbon ribbon-top ribbon-vertical">
+                        {% if active_applications.advertiser.pk == advertiser.pk %}
+                            <div class="ribbon-label bg-info">
+                                Вы участвуете в акции рекламодателя
+                            </div>
+                        {% endif %}
+                        <a href="/client/advertiser_desc/{{advertiser.pk}}/" class="text-center">
+                        {% thumbnail advertiser.company_logo "600" as im %}
+                            {% comment %}<img src="{{ im.url }}" alt="image" class="card-img-top" />{% endcomment %}
+                            <img src="{{ im.url }}" alt="image" height="250" />
+                        {% endthumbnail %}
+                        </a>
+
+                        <!--begin::Card body-->
+                        <div class="card-body d-flex flex-center flex-column pt-12 p-9">
+                            <!--begin::Name-->
+                            <a href="/client/advertiser_desc/{{advertiser.pk}}/" class="fs-4 text-gray-800 text-hover-primary fw-bolder mb-0">{{advertiser.company_name}}</a>
+                            <!--end::Name-->
+                            <!--begin::Position-->
+                            <div class="fs-6 fw-bold text-gray-600 mb-5">
+                                {{advertiser.business_type}}&nbsp;
+                            </div>
+                            <!--end::Position-->
+                            <!--begin::Info-->
+                            <div class="d-flex flex-center flex-wrap">
+                                <!--begin::Stats-->
+                                <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mx-2 mb-3 col-12">
+                                    <div class="fs-6 fw-bolder text-gray-700">{{advertiser.campaigns_count}} {{ advertiser.campaigns_count|rupluralize:"акция,акции,акций" }}</div>
+                                </div>
+                                <!--end::Stats-->
+                                <!--begin::Stats-->
+
+
+
+                            </div>
+                            <!--end::Info-->
+                        </div>
+                        <!--end::Card body-->
+                        <div class="card-footer bg-transparent">
+                            <a href="/client/advertiser_desc/{{advertiser.pk}}/" class="btn btn-success w-100 py-3 cursor-pointer">Перейти</a>
+                        </div>
+                    </div>
+                    <!--end::Card-->
+
+
+                </div>
+                <!--end::Col-->
+                {% endif %}
+            {% endfor %}
+
+
+
+    <!--end::Body-->
+</div>
+<!--end::Tables Widget 5-->
+    </div>
+</div>
+</div>
+</div>
+
+{% endblock content %}
+
+{% block javascript %}
+    {% if active_applications %}
+    {% if not advertisers_list %}
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/vis-timeline/vis-timeline.bundle.js"></script>
+    <script>
+    function timestamp_to_date (num) {
+        return "<br>" + "<small>" + new Date(photoreports_array[num].start_date).toLocaleDateString() + "-" + new Date(photoreports_array[num].end_date).toLocaleDateString() + "</small>";
+    }
+        function dateCheck (from,to) {
+            let out = false;
+            photoreports_dates.forEach(element => {
+                if ((element <= to && element >= from))
+                    out = true;
+            });
+            return out;
+        }
+
+        let photoreports_dates = [];
+        {% for old_photoreport in photoreports %}
+            photoreports_dates.push((new Date('{{ old_photoreport.created_date|date:"Y-m-d" }}')).getTime());
+        {% endfor %}
+
+        // DOM element where the Timeline will be attached
+        let container = document.getElementById("kt_docs_vistimeline_basic");
+        let timeline_start_date = new Date("{{ photoreport_start_date }}").getTime();
+        let timeline_start_date_one_day = 1000 * 60 * 60 * 24;
+        let date_now = Date.now();
+
+        let photoreports_array = []
+        for (let i = 1; i <= 6; i++) {
+            start_date_s = timeline_start_date + timeline_start_date_one_day * 14 * i;
+            end_date_s = timeline_start_date + timeline_start_date_one_day * 14 * i + timeline_start_date_one_day * 14;
+            badge = '';
+            if (start_date_s > date_now) {
+                badge = '';
+            } else if (dateCheck(start_date_s, end_date_s)) {
+                badge = 'bg-light-success text-success';
+            } else {
+                badge = 'bg-light-danger text-danger';
+            }
+
+            photoreports_array.push({
+                start_date: start_date_s, end_date: end_date_s, class_name: badge
+            });
+        }
+
+{% comment %}        let photoreports_array = [
+            {
+                start_date: (timeline_start_date + timeline_start_date_one_day * 14), end_date: (timeline_start_date + timeline_start_date_one_day * 28)
+            },
+            {
+                start_date: (timeline_start_date + timeline_start_date_one_day * 28), end_date: (timeline_start_date + timeline_start_date_one_day * 42)
+            },
+            {
+                start_date: (timeline_start_date + timeline_start_date_one_day * 42), end_date: (timeline_start_date + timeline_start_date_one_day * 56)
+            },
+            {
+                start_date: (timeline_start_date + timeline_start_date_one_day * 56), end_date: (timeline_start_date + timeline_start_date_one_day * 70)
+            },
+            {
+                start_date: (timeline_start_date + timeline_start_date_one_day * 70), end_date: (timeline_start_date + timeline_start_date_one_day * 84)
+            },
+            {
+                start_date: (timeline_start_date + timeline_start_date_one_day * 84), end_date: (timeline_start_date + timeline_start_date_one_day * 98)
+            },
+
+        ];{% endcomment %}
+
+        // Create a DataSet (allows two way data-binding)
+        let items = new vis.DataSet([
+            { id: 1, content: "Одобрение заявки", start: timeline_start_date, type: "point" },
+            { id: 2, content: "фотоотчет 1" + timestamp_to_date(0), start: photoreports_array[0].start_date, end: photoreports_array[0].end_date, className: photoreports_array[0].class_name },
+            { id: 3, content: "фотоотчет 2" + timestamp_to_date(1), start: photoreports_array[1].start_date, end: photoreports_array[1].end_date, className: photoreports_array[1].class_name },
+            { id: 4, content: "фотоотчет 3" + timestamp_to_date(2), start: photoreports_array[2].start_date, end: photoreports_array[2].end_date, className: photoreports_array[2].class_name },
+            { id: 5, content: "фотоотчет 4" + timestamp_to_date(3), start: photoreports_array[3].start_date, end: photoreports_array[3].end_date, className: photoreports_array[3].class_name },
+            { id: 6, content: "фотоотчет 5" + timestamp_to_date(4), start: photoreports_array[4].start_date, end: photoreports_array[4].end_date, className: photoreports_array[4].class_name },
+            { id: 7, content: "фотоотчет 6" + timestamp_to_date(5), start: photoreports_array[5].start_date, end: photoreports_array[5].end_date, className: photoreports_array[5].class_name },
+
+        ]);
+
+        // Configuration for the Timeline
+        let options = {
+            start: timeline_start_date,
+            end: photoreports_array[5].end_date,
+            showCurrentTime: true,
+            horizontalScroll: false,
+            verticalScroll: false,
+            locale: 'ru_RU'
+        };
+
+        // Create a Timeline
+        let timeline = new vis.Timeline(container, items, options);
+        timeline.setSelection([{{ current_period }}], {});
+    </script>
+    {% endif %}
+    {% endif %}
+{% endblock javascript %}
+{% block css %}
+    <link href="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/vis-timeline/vis-timeline.bundle.css" rel="stylesheet" type="text/css" />
+{% endblock css %}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+	<!--begin::Head-->
+	<head><base href="/">
+		<meta charset="utf-8" />
+		<title>Вход в систему | Прилипло</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="shortcut icon" href="/static/img/favicons/favicon-32x32.png" />
+		<!--begin::Fonts-->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+		<!--end::Fonts-->
+		<!--begin::Global Stylesheets Bundle(used by all pages)-->
+		<link href="/static/metronic/html/theme/demo1/dist/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+		<link href="/static/metronic/html/theme/demo1/dist/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+		<!--end::Global Stylesheets Bundle-->
+	</head>
+	<!--end::Head-->
+	<!--begin::Body-->
+	<body id="kt_body" class="bg-white">
+		<!--begin::Main-->
+		<div class="d-flex flex-column flex-root">
+			<!--begin::Authentication - Sign-in -->
+			<div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url(/static/metronic/html/theme/demo1/dist/assets/media/illustrations/progress-hd.png)">
+				<!--begin::Content-->
+				<div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+					<!--begin::Logo-->
+					<h1 class="mb-12">
+                        <a href="/">
+						<img alt="Logo" src="/static/metronic/html/theme/demo1/dist/assets/media/logos/logo-1-dark.png" class="h-100px" >
+                        </a>
+                       {% comment %}ПРИЛИПЛО{% endcomment %}
+					</h1>
+					<!--end::Logo-->
+					<!--begin::Wrapper-->
+					<div class="w-lg-500px bg-white rounded shadow-sm p-10 p-lg-15 mx-auto">
+						<!--begin::Form-->
+
+						<form class="form w-100" novalidate="novalidate" id="kt_sign_in_form" action="/login_in/" method="post">
+							{% csrf_token %}
+							<!--begin::Heading-->
+							<div class="text-center mb-10">
+								<!--begin::Title-->
+								<h1 class="text-dark mb-3">Авторизация</h1>
+								<!--end::Title-->
+								<!--begin::Link-->
+								<div class="text-gray-400 fw-bold fs-4">Не зарегистрированы?
+								<a href="/sign_up/" class="link-primary fw-bolder">Создать аккаунт</a></div>
+								<!--end::Link-->
+							</div>
+							<!--begin::Heading-->
+							<!--begin::Input group-->
+							<div class="fv-row mb-10">
+								<!--begin::Label-->
+								<label class="form-label fs-6 fw-bolder text-dark">Телефон, Email или Логин</label>
+								<!--end::Label-->
+								<!--begin::Input-->
+								<input class="form-control form-control-lg form-control-solid" type="text" name="username" autocomplete="off" value="{{username}}" />
+								<!--end::Input-->
+							</div>
+							<!--end::Input group-->
+							<!--begin::Input group-->
+							<div class="fv-row mb-10">
+								<!--begin::Wrapper-->
+								<div class="d-flex flex-stack mb-2">
+									<!--begin::Label-->
+									<label class="form-label fw-bolder text-dark fs-6 mb-0">Пароль</label>
+									<!--end::Label-->
+									<!--begin::Link-->
+									<a href="/password_restore" class="link-primary fs-6 fw-bolder">Забыли пароль?</a>
+									<!--end::Link-->
+								</div>
+								<!--end::Wrapper-->
+								<!--begin::Input-->
+								<input class="form-control form-control-lg form-control-solid" type="password" name="password" autocomplete="off" />
+								<!--end::Input-->
+							</div>
+							<!--end::Input group-->
+							<!--begin::Actions-->
+							<div class="text-center">
+								<!--begin::Submit button-->
+								<button type="submit" id="kt_sign_in_submit" class="btn btn-lg btn-primary w-100 mb-5">
+									<span class="indicator-label">Вход</span>
+									<span class="indicator-progress">Подождите...
+									<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+								</button>
+								<!--end::Submit button-->
+
+							</div>
+							<!--end::Actions-->
+						</form>
+						<!--end::Form-->
+					</div>
+					<!--end::Wrapper-->
+				</div>
+				<!--end::Content-->
+			</div>
+			<!--end::Authentication - Sign-in-->
+		</div>
+		<!--end::Main-->
+		<!--begin::Javascript-->
+		<!--begin::Global Javascript Bundle(used by all pages)-->
+		<script src="/static/metronic/html/theme/demo1/dist/assets/plugins/global/plugins.bundle.js"></script>
+		<script src="/static/metronic/html/theme/demo1/dist/assets/js/scripts.bundle.js"></script>
+		<!--end::Global Javascript Bundle-->
+		<!--begin::Page Custom Javascript(used by this page)-->
+		<script src="/static/metronic/html/theme/demo1/dist/assets/js/custom/authentication/sign-in/general.js"></script>
+		<!--end::Page Custom Javascript-->
+		<!--end::Javascript-->
+		{% if err == 1 %}
+			<script>auth_error();</script>
+		{% elif err == 2 %}
+			<script>
+				Swal.fire({
+					text: "Пользователю не присвоен статус",
+					icon: "error",
+					buttonsStyling: false,
+					confirmButtonText: "OK",
+					customClass: {
+						confirmButton: "btn btn-primary"
+					}
+				});
+			</script>
+		{% endif %}
+        <!-- Yandex.Metrika counter -->
+        <script type="text/javascript" >
+            (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+            (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+            ym(85527250, "init", {
+                clickmap:true,
+                trackLinks:true,
+                accurateTrackBounce:true
+            });
+        </script>
+        <noscript><div><img src="https://mc.yandex.ru/watch/85527250" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+        <!-- /Yandex.Metrika counter -->
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'success' %}
+                    <script>show_message('{{ message }}', 'success');</script>
+                {% endif %}
+
+                {% if message.tags == 'error' %}
+                    <script>show_message('{{ message }}', 'error');</script>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+	</body>
+	<!--end::Body-->
+</html>

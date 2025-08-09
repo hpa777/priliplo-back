@@ -1,0 +1,180 @@
+{% load thumbnail %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<!--begin::Head-->
+{% include "frontend/layout/header.html" %}
+<!--end::Head-->
+
+<!--begin::Body-->
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled">
+
+
+<!--begin::Main-->
+<!--begin::Root-->
+<div class="d-flex flex-column flex-root">
+    <!--begin::Page-->
+    <div class="page d-flex flex-row flex-column-fluid">
+        <!--begin::Wrapper-->
+        <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+
+            {% include "frontend/layout/header/_base.html" %}
+
+
+            <div class="separator border-gray-400 mb-10"></div>
+
+            <!--begin::Container-->
+            <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+                <!--begin::Post-->
+                <div class="content flex-row-fluid" id="kt_content">
+
+                    {% include "frontend/layout/header/_breadcrumbs.html" %}
+
+                    <!--begin::Row-->
+                    <div class="row gy-0 gx-10">
+                        <div class="col-lg-12">
+                            <h1>{{ title_1 }}</h1>
+                        </div>
+                    </div>
+
+                    <div class="row gy-0 gx-10">
+                        <div class="col-lg-8">
+                            {% thumbnail object.campaign_image "650" as im %}
+                                <!--begin::Image-->
+                                <a class="d-block overlay h-100 d-inline-block" data-fslightbox="lightbox-basic" href="{{ im.url }}">
+                                <img src="{{ im.url }}" class="img-fluid w-100 card-rounded">
+{#                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px h-100" style="background-image:url('{{ im.url }}')"></div>#}
+                                </a>
+                                <!--end::Image-->
+{% comment %}                                <div>
+                                    <img src="{{ im.url }}" class="img-thumbnail"  alt="">
+                                </div>{% endcomment %}
+                            {% endthumbnail %}
+                        </div>
+                        <div class="col-lg-4">
+                            <!--begin::Stats-->
+                            <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mb-3 col-12">
+                                <div class="fs-6 fw-bolder text-gray-700">{{ award }} баллов</div>
+                                <div class="fw-bold text-gray-400">Бонусы за всю акцию</div>
+                            </div>
+                            <!--end::Stats-->
+                            <!--begin::Stats-->
+                            <div class="border border-gray-300 border-dashed rounded min-w-80px py-3 px-4 mb-3 col-12">
+                                <div class="fs-6 fw-bolder text-gray-700">{{ object.get_applications_quota }}</div>
+                                <div class="fw-bold text-gray-400">Требуется автомобилей</div>
+                            </div>
+                            <!--end::Stats-->
+                            <!--begin::Stats-->
+                            <div class="border border-gray-300 border-dashed rounded min-w-150px py-3 px-4 mb-3 col-12">
+                                <div class="fs-6 fw-bolder text-gray-700">{{ object.end_date|date:"d E Y" }}</div>
+                                <div class="fw-bold text-gray-400">Дата окончания приема заявок</div>
+                            </div>
+                            <!--end::Stats-->
+
+
+                            <a href="{% url "client:advertiser_desc" object.advertiser.pk %}" class="btn btn-primary w-100 btn-lg btn-hover-scale px-10 py-5 text-center">Участвовать в акции</a>
+
+                            <div class="pt-10 pb-10 col-12">
+                                <p>Поделиться с друзьями</p>
+                                <script src="https://yastatic.net/share2/share.js"></script>
+                                <div class="ya-share2" data-curtain data-size="l" data-limit="5" data-services="vkontakte,odnoklassniki,telegram,viber,whatsapp" data-copy="extraItem"></div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!--end::Row-->
+
+
+                    <!--begin::Row-->
+                    <div class="row gy-0 gx-10 pb-10">
+                        <!--begin::Col-->
+                        <div class="col-lg-8">
+                            <h2>Описание акции</h2>
+                            {{ campaign.short_description }}
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Row-->
+
+
+                <!-- Описание компании -->
+                    <!--begin::About card-->
+                    <div class="card col-lg-8">
+                        <!--begin::Body-->
+                        <div class="card-body p-5">
+                            <!--begin::About-->
+                            <div class="mb-18">
+                                <!--begin::Wrapper-->
+                                <div class="mb-10">
+                                    <!--begin::Top-->
+                                    <div class="mb-15">
+                                        <!--begin::Title-->
+                                        <h2 class="text-dark mb-5">О компании {{object.advertiser.company_name}}</h2>
+                                        <!--end::Title-->
+                                        <!--begin::Text-->
+                                        <div class="fs-5 text-gray-600">
+
+
+                                            <div class="">
+                                                <!--begin::Status-->
+                                                <div class="mb-1">
+                                                    <div class="me-auto text-gray-900">{{object.advertiser.business_type}}</div>
+                                                </div>
+                                                <!--end::Status-->
+                                                <!--begin::Description-->
+                                                <div class="d-flex flex-wrap fw-bold mb-4 fs-5 text-gray-600">{{object.advertiser.company_description|linebreaksbr}}</div>
+                                                <!--end::Description-->
+                                            </div>
+
+
+
+                                        </div>
+                                        <!--end::Text-->
+                                    </div>
+                                    <!--end::Top-->
+                                </div>
+                                <!--end::Wrapper-->
+                            </div>
+
+                        </div>
+                        <!--end::Body-->
+                    </div>
+                    <!--end::About card-->
+
+
+                <!-- / Описание компании -->
+
+                </div>
+                <!--end::Post-->
+            </div>
+            <!--end::Container-->
+
+            {% include "frontend/layout/_footer.html" %}
+
+        </div>
+        <!--end::Wrapper-->
+    </div>
+    <!--end::Page-->
+</div>
+<!--end::Root-->
+
+<!--end::Main-->
+
+
+
+
+{% include "frontend/partials/_scrolltop.html" %}
+
+<!--begin::Modals-->
+
+<!--end::Modals-->
+
+{% include "frontend/layout/_javascript.html" %}
+<script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+
+
+<!--end::Javascript-->
+</body>
+<!--end::Body-->
+</html>

@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль компании {{ request.user.username }}{% endblock %}
+
+
+{% block content %}
+
+    <!--begin::Basic info-->
+    <div class="card mb-5 mb-xl-10">
+        <!--begin::Card header-->
+        <div class="card-header border-0 "  data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+            <!--begin::Card title-->
+            <div class="card-title m-0">
+                <h3 class="fw-bolder m-0">Профиль</h3>
+            </div>
+            <!--end::Card title-->
+        </div>
+        <!--begin::Card header-->
+        <!--begin::Content-->
+        <div id="kt_account_profile_details" >
+
+            <!--begin::Form-->
+            <form id="kt_account_profile_details_form" method="post" class="form" action="{% url 'company:save_user_data' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!--begin::Card body-->
+                <div class="card-body border-top p-9">
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">ФИО контактного лица</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="company_fio" class="form-control form-control-lg form-control-solid" placeholder="ФИО контактного лица" value="{{company_profile.company_fio }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Телефон</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="company_phone" id="company_phone" class="form-control form-control-lg form-control-solid" placeholder="Телефон" value="{{company_profile.company_phone }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+
+
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Наименование компании</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="company_name" class="form-control form-control-lg form-control-solid" placeholder="Наименование компании" value="{{company_profile.company_name }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Юридическое лицо</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="company_legal_name" class="form-control form-control-lg form-control-solid" placeholder="Юридическое лицо" value="{{company_profile.company_legal_name }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">ИНН компании</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="company_inn" class="form-control form-control-lg form-control-solid" placeholder="ИНН компании" value="{{company_profile.company_inn }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Логин кассира</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="kassir_login" class="form-control form-control-lg form-control-solid" placeholder="Логин кассира" value="{{company_profile.kassir_login }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Пароль кассира</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="kassir_password" class="form-control form-control-lg form-control-solid" placeholder="Пароль кассира" value="{{company_profile.kassir_password }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Вид деятельности</label>
+                        <div class="col-lg-8 fv-row">
+                            <select required name="business_type" aria-label="Выберите пробег в месяц" data-control="select2" data-placeholder="Вид деятельности..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Вид деятельности...</option>
+                                {% for business_type in business_types %}
+                                    <option data-bs-offset="-39600" value="{{ business_type.pk }}" {% if company_profile.business_type == business_type %}selected="selected"{% endif %}>{{ business_type.title }}</option>
+                                {% endfor %}
+                            </select>
+                            {% comment %}<input required type="text" name="short_description" maxlength="100" class="form-control form-control-lg form-control-solid" placeholder="Вид деятельности (100 символов)" value="{{company_profile.short_description }}" />{% endcomment %}
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Описание</label>
+                        <div class="col-lg-8 fv-row">
+                            <textarea class="form-control form-control-solid" rows="3" name="company_description" placeholder="Полная информация о компании">{{ company_profile.company_description }}</textarea>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Логотип компании</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8">
+                            <!--begin::Image input-->
+                            <div class="image-input image-input-outline {% if not company_profile.company_logo %}image-input-empty{% endif %}" data-kt-image-input="true" style="background-size: contain; background-position:center;background-image: url(/static/metronic/html/theme/demo1/dist/assets/media/svg/files/upload.svg)">
+                                <!--begin::Preview existing avatar-->
+                                <div class="image-input-wrapper w-250px h-125px" style="background-size: contain; background-position:center; {% if company_profile.company_logo %}background-image: url(/media/{{ company_profile.company_logo }}){% endif %}"></div>
+                                <!--end::Preview existing avatar-->
+                                <!--begin::Label-->
+                                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Изменить логотип">
+                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                    <!--begin::Inputs-->
+                                    <input type="file" name="company_logo" accept=".png, .jpg, .jpeg" />
+                                    <input type="hidden" name="image_remove" />
+                                    <!--end::Inputs-->
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Cancel-->
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Отменить загрузку">
+																<i class="bi bi-x fs-2"></i>
+															</span>
+                                <!--end::Cancel-->
+                                <!--begin::Remove-->
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Удалить логотип">
+																<i class="bi bi-x fs-2"></i>
+															</span>
+                                <!--end::Remove-->
+                            </div>
+                            <!--end::Image input-->
+                            <!--begin::Hint-->
+                            <div class="form-text">Разрешенные типы файлов: png, jpg, jpeg.</div>
+                            <!--end::Hint-->
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="d-flex flex-stack w-lg-50">
+                        <!--begin::Label-->
+                        <div class="me-5">
+                            <label class="fs-6 fw-bold form-label">Согласие на обработку персональных данных</label>
+                            <div class="fs-7 fw-bold text-muted"><a href="{% url "soglasie" %}" target="_blank">Текст соглашения на обработку персональных данных</a></div>
+                        </div>
+                        <!--end::Label-->
+
+                        <!--begin::Switch-->
+                        <label class="form-check form-check-custom form-check-solid form-check-lg">
+                            <input class="form-check-input" type="checkbox" value="1" required="required"/>
+                            <span class="form-check-label fw-bold text-muted">
+                                Согласен
+                            </span>
+                        </label>
+                        <!--end::Switch-->
+                    </div>
+                    <!--end::Input group-->
+
+
+
+                    <!--begin::Input group-->
+                    <div class="d-flex flex-stack w-lg-50">
+                        <!--begin::Label-->
+                        <div class="me-5">
+                            <label class="fs-6 fw-bold form-label">Договор</label>
+                            <div class="fs-7 fw-bold text-muted"><a href="/media/{{ documents_settings.dogovor }}" target="_blank">Посмотреть</a></div>
+                        </div>
+                        <!--end::Label-->
+
+                        <!--begin::Switch-->
+                        <label class="form-check form-check-custom form-check-solid form-check-lg">
+                            <input class="form-check-input" type="checkbox" value="1" required="required"/>
+                            <span class="form-check-label fw-bold text-muted">
+                                Согласен
+                            </span>
+                        </label>
+                        <!--end::Switch-->
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="d-flex flex-stack w-lg-50">
+                        <!--begin::Label-->
+                        <div class="me-5">
+                            <label class="fs-6 fw-bold form-label">Пользовательское Соглашение</label>
+                            <div class="fs-7 fw-bold text-muted"><a href="/media/{{ documents_settings.soglasie }}" target="_blank">Посмотреть</a></div>
+                        </div>
+                        <!--end::Label-->
+
+                        <!--begin::Switch-->
+                        <label class="form-check form-check-custom form-check-solid form-check-lg">
+                            <input class="form-check-input" type="checkbox" value="1" required="required"/>
+                            <span class="form-check-label fw-bold text-muted">
+                                Согласен
+                            </span>
+                        </label>
+                        <!--end::Switch-->
+                    </div>
+                    <!--end::Input group-->
+
+
+
+                </div>
+                <!--end::Card body-->
+                <!--begin::Actions-->
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <button type="reset" class="btn btn-white btn-active-light-primary me-2">Отмена</button>
+                    <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Сохранить</button>
+                </div>
+                <!--end::Actions-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Basic info-->
+
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        $("#model_selector").multiselectsplitter();
+        KTUtil.onDOMContentLoaded(function () {
+            Inputmask({
+                "mask": "+9(999) 999-9999"
+            }).mask("#company_phone");
+        });
+    </script>
+{% endblock javascript %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Создать группу задач{% endblock title %}
+
+{% block content %}
+    <!--begin::Basic info-->
+    <div class="card mb-5 mb-xl-10">
+        <!--begin::Card header-->
+        <div class="card-header border-0 " data-bs-target="#kt_task_details" aria-expanded="true" aria-controls="kt_task_details">
+            <!--begin::Card title-->
+            <div class="card-title m-0">
+                {% if form_type == 'edit' %}
+                    <h3 class="fw-bolder m-0">Редактирование группы задач</h3>
+                {% else %}
+                    <h3 class="fw-bolder m-0">Создание группы задач</h3>
+                {% endif %}
+            </div>
+            <!--end::Card title-->
+        </div>
+        <!--begin::Card header-->
+        <!--begin::Content-->
+        <div id="kt_task_details" >
+            <!--begin::Form-->
+
+            <form id="create_task_form" class="form" action="{% url "adminpanel:save_task_group_data" %}" method="post">
+                {% csrf_token %}
+                {% if form_type == 'edit' %}
+                    <input type="hidden" name="id" value="{{ obj_id }}">
+                {% endif %}
+
+                <!--begin::Card body-->
+                <div class="card-body border-top p-9">
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Название группы</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8 fv-row">
+                            <input type="text" name="title" class="form-control form-control-lg form-control-solid" placeholder="Название группы" value="{{ form.data.title }}" />
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+                </div>
+                <!--end::Card body-->
+                <!--begin::Actions-->
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    {% if form_type == 'edit' %}
+                        <a href="{% url "adminpanel:todo_group_list" %}" class="btn btn-white btn-active-light-primary me-2">Отмена</a>
+                    {% else %}
+                        <button type="reset" class="btn btn-white btn-active-light-primary me-2">Отмена</button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary" id="create_campaign_form_submit">Сохранить</button>
+                </div>
+                <!--end::Actions-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Basic info-->
+{% endblock content %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block javascript %}
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+    <script>
+    </script>
+{% endblock javascript %}

@@ -1,0 +1,474 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Список задач{% endblock title %}
+
+
+{% block content %}
+    <div class="modal fade" tabindex="-1" id="request_application_decline_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="needs-validation" id="request_application_decline_form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="request_application_decline_id" value="">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Подтверждение чего-то</h5>
+
+                        <!--begin::Close-->
+                        <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                            <span class="svg-icon svg-icon-2x"></span>
+                        </div>
+                        <!--end::Close-->
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-danger">Отказать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-1 mb-xxl-1">
+                <!--begin::Header-->
+                <div class="card-header border-0 pt-5">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bolder fs-3 mb-1">Активные задачи</span>
+                    </h3>
+                    <a href="{% url "adminpanel:create_task" %}" class="btn btn-primary align-self-center">Создать задачу</a>
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-sm table-striped table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 min-w-250px ">Задача</th>
+                                        <th class="p-0 w-200px text-center">Компания/Акция</th>
+                                        <th class="p-0 w-250px text-center">Автовладелец </th>
+                                        <th class="p-0 min-w-100px  text-center">Запланированная дата</th>
+                                        <th class="p-0 w-150px">&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for company_task in company_tasks_list %}
+                                        <tr>
+                                            <td class=" ">
+                                                <a id="task_id{{ company_task.pk }}" href="{% url "adminpanel:view_task" company_task.pk %}" class="text-dark fw-bolder text-hover-primary cursor-pointer">{{ company_task.title }}</a>
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                <span class="badge badge-light-success">{{ company_task.advertiser.company_name }}</span><br>
+                                                <span class="badge badge-light-warning">{{ company_task.campaign.title }}</span>
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                {{ company_task.client.userprofile.get_full_name }}<br>
+                                                {{ company_task.client.userprofile.phone }}
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                {% if company_task.plane_finish_date %}{{ company_task.plane_finish_date }}{% endif %}
+                                            </td>
+
+                                            <td class="text-end">
+                                                <div class="btn-group" role="group">
+                                                    <a class="btn btn-success btn-sm btn-icon cursor-pointer" onclick="archive_task('{{company_task.pk}}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Завершить задачу"><i class="fas fa-check fs-4"></i></a>
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-sm btn-secondary btn-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                                        <ul class="dropdown-menu">
+                                                          <li><a class="dropdown-item" href="{% url "adminpanel:edit_task" company_task.pk %}"><i class="fas fa-edit"></i> Редактировать</a></li>
+                                                          <li><a class="dropdown-item cursor-pointer" onclick="delete_task('{{company_task.pk}}')"><i class="fas fa-trash"></i> Удалить</a></li>
+                                                        </ul>
+                                                  </div>
+                                              </div>
+                                            </td>
+
+
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+
+        <!--end::Tab pane-->
+
+
+        <div class="separator border-light my-10"></div>
+
+
+
+
+
+
+
+        <!-- Задачи отсортированные по категориям -->
+        <!--begin::Tab pane-->
+        {% for key, company_tasks_grouped_list in company_tasks_by_group_list.items %}
+        <div class="col-xl-12">
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-1 mb-xxl-1">
+                <!--begin::Header-->
+                <div class="card-header border-0 pt-5">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bolder fs-3 mb-1">{{ company_tasks_grouped_list.0.task_group }}</span>
+                    </h3>
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-sm table-striped table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 min-w-250px ">Задача</th>
+                                        <th class="p-0 w-200px text-center">Компания/Акция</th>
+                                        <th class="p-0 w-250px text-center">Автовладелец </th>
+                                        <th class="p-0 min-w-100px  text-center">Запланированная дата</th>
+                                        <th class="p-0 w-150px">&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for company_task in company_tasks_grouped_list %}
+                                        <tr>
+                                            <td class=" ">
+                                                <a id="task_id{{ company_task.pk }}" href="{% url "adminpanel:view_task" company_task.pk %}" class="text-dark fw-bolder text-hover-primary cursor-pointer">{{ company_task.title }}</a>
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                <span class="badge badge-light-success">{{ company_task.advertiser.company_name }}</span><br>
+                                                <span class="badge badge-light-warning">{{ company_task.campaign.title }}</span>
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                {{ company_task.client.userprofile.get_full_name }}<br>
+                                                {{ company_task.client.userprofile.phone }}
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                {% if company_task.plane_finish_date %}{{ company_task.plane_finish_date }}{% endif %}
+                                            </td>
+
+                                            <td class="text-end">
+                                                <div class="btn-group" role="group">
+                                                    <a class="btn btn-success btn-sm btn-icon cursor-pointer" onclick="archive_task('{{company_task.pk}}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Завершить задачу"><i class="fas fa-check fs-4"></i></a>
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-sm btn-secondary btn-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                                        <ul class="dropdown-menu">
+                                                          <li><a class="dropdown-item" href="{% url "adminpanel:edit_task" company_task.pk %}"><i class="fas fa-edit"></i> Редактировать</a></li>
+                                                          <li><a class="dropdown-item cursor-pointer" onclick="delete_task('{{company_task.pk}}')"><i class="fas fa-trash"></i> Удалить</a></li>
+                                                        </ul>
+                                                  </div>
+                                              </div>
+                                            </td>
+
+
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+        {% endfor %}
+
+        <!--end::Tab pane-->
+
+
+        <div class="separator border-light my-10"></div>
+
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-1 mb-xxl-1">
+                <!--begin::Header-->
+                <div class="card-header border-0 pt-5 cursor-pointer" onClick="$(this).next().toggle()">
+                    <h3 class="card-title align-items-start flex-column">
+                        <a class="card-label fw-bolder fs-3 mb-1">Завершенные задачи <i class="fas fa-angle-down"></i></a>
+                    </h3>
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+
+                <div class="card-body py-3" id="ended_tasks">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-sm table-striped table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 min-w-250px ">Задача</th>
+                                        <th class="p-0 w-200px text-center">Компания/Акция</th>
+                                        <th class="p-0 w-250px text-center">Автовладелец </th>
+                                        <th class="p-0 min-w-100px  text-center">Запланированная дата</th>
+                                        <th class="p-0 min-w-100px  text-center">Дата завершения</th>
+                                        <th class="p-0 w-150px">&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for company_task in ended_tasks_list %}
+                                        <tr>
+                                            <td class=" ">
+                                                <a id="task_id{{ company_task.pk }}" href="{% url "adminpanel:view_task" company_task.pk %}" class="text-dark fw-bolder text-hover-primary cursor-pointer">{{ company_task.title }}</a>
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                <span class="badge badge-light-success">{{ company_task.advertiser.company_name }}</span><br>
+                                                <span class="badge badge-light-warning">{{ company_task.campaign.title }}</span>
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                {{ company_task.client.userprofile.get_full_name }}<br>
+                                                {{ company_task.client.userprofile.phone }}
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                {% if company_task.plane_finish_date %}{{ company_task.plane_finish_date }}{% endif %}
+                                            </td>
+                                            <td class="text-center text-muted ">
+                                                {% if company_task.finish_date %}{{ company_task.finish_date }}{% endif %}
+                                            </td>
+
+                                            <td class="text-end">
+                                                <div class="btn-group" role="group">
+                                                    <a class="btn btn-warning btn-sm btn-icon cursor-pointer" onclick="activate_task('{{company_task.pk}}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Возобновить задачу"><i class="fas fa-undo"></i></a>
+                                                    <div class="btn-group" role="group">
+                                                        <button type="button" class="btn btn-sm btn-secondary btn-icon dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                                        <ul class="dropdown-menu">
+                                                          <li><a class="dropdown-item" href="{% url "adminpanel:edit_task" company_task.pk %}"><i class="fas fa-edit"></i> Редактировать</a></li>
+                                                          <li><a class="dropdown-item cursor-pointer" onclick="delete_task('{{company_task.pk}}')"><i class="fas fa-trash"></i> Удалить</a></li>
+                                                        </ul>
+                                                  </div>
+                                              </div>
+                                            </td>
+
+
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+
+        <!--end::Tab pane-->
+
+
+
+    </div>
+    <!--end::Tab Content-->
+
+
+
+
+
+
+{% endblock content %}
+
+{% block css %}
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+
+    <script>
+        var datatable = $('.kt_datatable').dataTable( {
+            ordering:  false,
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level == 55 %}
+                        search: {
+                            "search": "{{ message }}"
+                        },
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
+            }
+        } );
+        var request_application_decline_modal;
+        /*
+        function show_request_application_decline_modal(id) {
+            request_application_decline_modal.show();
+            let myForm = $('#request_application_decline_form');
+            myForm.attr('action', "/adminpanel/application_action/"+id + "/" + 3 + "/");
+
+            return false;
+        }
+
+        function approve_form(id) {
+            $.get( "/adminpanel/application_action/"+id + "/" + 2, function( data ) {
+                if (data === "ok") {
+                    var drawerElement = document.getElementById("request_applications_userinfo_id" + id);
+                    var drawer = KTDrawer.getInstance(drawerElement);
+                    drawer.hide();
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+        function decline_form(id) {
+            $.post( "/adminpanel/application_action/"+id + "/" + 3, function( data ) {
+                if (data === "ok") {
+                    var drawerElement = document.getElementById("request_applications_userinfo_id" + id);
+                    var drawer = KTDrawer.getInstance(drawerElement);
+                    drawer.hide();
+                    request_application_decline_modal.hide();
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+
+         */
+
+
+        function delete_task(id) {
+            Swal.fire({
+                text: "Вы действительно хотите удалить задачу" +  "?",
+                icon: "warning",
+                showCancelButton: true,
+                buttonsStyling: false,
+                confirmButtonText: "Да удалить!",
+                cancelButtonText: "Нет, не удалять",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-danger",
+                    cancelButton: "btn fw-bold btn-active-light-primary"
+                }
+            }).then(function (result) {
+                if (result.value) {
+                    $.get( "/adminpanel/remove_task/"+id, function( data ) {
+                        if (data === "ok") {
+                            top.location.href = top.location.href;
+                        } else {
+                            alert( data );
+                        }
+                    });
+                    return false;
+                }
+            });
+        }
+
+
+        function activate_task(id) {
+            $.get( "/adminpanel/change_task_status/"+id+"/0/", function( data ) {
+                if (data === "ok") {
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+
+        function archive_task(id) {
+            $.get( "/adminpanel/change_task_status/"+id+"/1/", function( data ) {
+                if (data === "ok") {
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+
+        $(document).ready(function() {
+            $("#ended_tasks").hide();
+            request_application_decline_modal = new bootstrap.Modal(document.getElementById('request_application_decline_modal'))
+
+            $(".sticker_reservation").flatpickr({
+                enableTime: true,
+                time_24hr: true,
+                minDate: "today",
+                dateFormat: "d-m-Y H:i",
+                "locale": "ru",
+                onClose: function(selectedDates, dateStr, instance){
+                    var applicationid = instance.element.dataset.applicationid;
+                    var load_indicator = instance.element.nextElementSibling;
+                    $(load_indicator).removeClass("d-none");
+
+                    $.post("/adminpanel/save_stiker_reserve_date/" + applicationid + "/", {reserve_date: dateStr, 'csrfmiddlewaretoken': '{{ csrf_token }}'}, function (data) {
+                        console.log(data);
+                        $(load_indicator).addClass("d-none");
+                    })
+                }
+            });
+
+
+        });
+    </script>
+{% endblock javascript %}

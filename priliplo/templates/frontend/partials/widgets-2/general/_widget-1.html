@@ -1,0 +1,112 @@
+{% load thumbnail %}
+
+<!--begin::General Widget 1-->
+<div class="mb-10">
+    <!--begin::Section-->
+    <div class="mb-16">
+        <!--begin::Top-->
+        <div class="text-center mb-12">
+            <!--begin::Title-->
+            <h3 class="fs-2hx text-dark mb-5">Акции</h3>
+            <!--end::Title-->
+            <!--begin::Text-->
+            <div class="fs-5 text-muted fw-bold">Для участия, выберите интересную вам акцию у любого из активных рекламодателей.</div>
+            <!--end::Text-->
+        </div>
+        <!--end::Top-->
+        <!--begin::Row-->
+        <div class="row g-10">
+
+
+            <!--begin::Col-->
+            {% comment %}<div class="col-md-4">
+                <!--begin::Publications post-->
+                <div class="card-xl-stretch me-md-6 mb-15">
+                    <!--begin::Overlay-->
+                    <a class="d-block overlay mb-4" href="/static/metronic/html/theme/demo1/dist/assets/media/stock/600x400/img-73.jpg">
+                        <!--begin::Image-->
+                        <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('/media/cache/1d/53/1d53c606cf37023f5dead4d1d248d26b.jpg')"></div>
+                        <!--end::Image-->
+                    </a>
+                    <!--end::Overlay-->
+                    <!--begin::Body-->
+                    <div class="m-0">
+                        <!--begin::Title-->
+                        <a href="../../demo11/dist/pages/user-profile/overview.html" class="fs-4 text-dark fw-bolder text-hover-primary text-dark lh-base">
+                            Пиццерия Гравитация
+                        </a>
+                        <!--end::Title-->
+                        <!--begin::Text-->
+                        <div class="fw-bold fs-5 text-gray-600 text-dark mb-3">
+                            Рестораны и кафе - Рестораны
+                        </div>
+                        <!--end::Text-->
+                        <!--begin::Content-->
+                        <div class="fs-6 fw-bolder">
+                            <!--begin::Date-->
+                            <span class="text-muted">1 акция</span>
+                            <!--end::Date-->
+                        </div>
+                        <!--end::Content-->
+                    </div>
+                    <!--end::Body-->
+                </div>
+                <!--end::Publications post-->
+            </div>{% endcomment %}
+            <!--end::Col-->
+
+            {% for campaign in pageobjects.campaigns %}
+                <!--begin::Col-->
+                <div class="col-md-4">
+                    <!--begin::Publications post-->
+                    <div class="card-xl-stretch me-md-6 mb-15 ribbon ribbon-top">
+                        <div class="ribbon-label score">
+                             {{ campaign.award }} баллов
+                        </div>
+
+                        <!--begin::Overlay-->
+                        <a class="d-block overlay mb-4" href="{% url 'main_campaign_desc' campaign.pk %}">
+                            {% thumbnail campaign.campaign_image "400" as im %}
+                                <!--begin::Image-->
+                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" style="background-image:url('{{ im.url }}')"></div>
+                                <!--end::Image-->
+                            {% endthumbnail %}
+
+                        </a>
+                        <!--end::Overlay-->
+                        <!--begin::Body-->
+                        <div class="m-0">
+
+                            <!--begin::Title-->
+                            <a href="{% url 'main_campaign_desc' campaign.pk %}" class="fs-4 text-dark fw-bolder text-hover-primary text-dark lh-base">
+                                {{ campaign.title }}
+                            </a>
+                            <!--end::Title-->
+                            <!--begin::Text-->
+                            <div class="fw-bold fs-5 text-gray-600 text-dark mb-3">
+                                {{ campaign.advertiser }}
+                            </div>
+                            <!--end::Text-->
+                            <!--begin::Content-->
+                            <div class="fs-6 fw-bolder">
+                                <!--begin::Date-->
+                                <span class="badge badge-warning">Заявки принимаются до {{ campaign.end_date|date:"d E Y" }}</span>
+                                <!--end::Date-->
+                            </div>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Body-->
+                    </div>
+                    <!--end::Publications post-->
+                </div>
+                <!--end::Col-->
+            {% endfor %}
+
+
+        </div>
+
+        <!--end::Row-->
+    </div>
+    <!--end::Section-->
+</div>
+<!--end::General Widget 1-->

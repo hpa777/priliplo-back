@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль пользователя {{ request.user.username }}{% endblock %}
+
+
+{% block content %}
+
+    <!--begin::Basic info-->
+    <div class="card mb-5 mb-xl-10">
+        <!--begin::Card header-->
+        <div class="card-header border-0 "  data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+            <!--begin::Card title-->
+            <div class="card-title m-0">
+                <h3 class="fw-bolder m-0">Профиль</h3>
+            </div>
+            <!--end::Card title-->
+        </div>
+        <!--begin::Card header-->
+        <!--begin::Content-->
+        <div id="kt_account_profile_details" >
+
+            <!--begin::Form-->
+            <form id="kt_account_profile_details_form" method="post" class="form" action="{% url 'client:save_user_data' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!--begin::Card body-->
+                <div class="card-body border-top p-9">
+
+                    <!--begin::Input group-->
+{% comment %}                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Фамилия</label>
+                        <div class="col-lg-8 fv-row">
+                            <input type="text" name="last_name" class="form-control form-control-lg form-control-solid" placeholder="Фамилия" value="{{user_profile.last_name }}" />
+                        </div>
+                    </div>{% endcomment %}
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Как к вам обращаться?</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="name" class="form-control form-control-lg form-control-solid" placeholder="Имя" value="{{user_profile.name }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    {% comment %}<div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Отчество</label>
+                        <div class="col-lg-8 fv-row">
+                            <input type="text" name="surname_name" class="form-control form-control-lg form-control-solid" placeholder="Отчество" value="{{user_profile.surname_name }}" />
+                        </div>
+                    </div>{% endcomment %}
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Телефон</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="text" name="phone" id="phone" class="form-control form-control-lg form-control-solid" placeholder="Телефон" value="{{user_profile.phone }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Гос номер автомобиля</label>
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <input required type="text" name="autonumber" id="autonumber" class="form-control form-control-lg form-control-solid flex-grow-1" placeholder="Гос номер автомобиля" value="{{user_profile.autonumber }}" />
+                                </div>
+
+                                {% if user_profile.loaded_rsainfo_attempts < 1 %}
+                                <div class="col-lg-6" id="loading_autoinfo_btn">
+                                    <button type="button" class="btn btn-warning fw-bold flex-shrink-0 col-12" id="upload_auto_data">
+                                        <span class="indicator-label">
+                                            Загрузить данные об автомобиле
+                                        </span>
+                                        <span class="indicator-progress">
+                                            Пожалуйста подождите... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                        </span>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+{% comment %}                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Марка автомобиля</label>
+                        <div class="col-lg-8 fv-row">
+                            <input type="text" name="automarka" class="form-control form-control-lg form-control-solid" placeholder="Марка автомобиля" value="{{user_profile.automarka }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Модель автомобиля</label>
+                        <div class="col-lg-8 fv-row">
+                            <input type="text" name="automodel" class="form-control form-control-lg form-control-solid" placeholder="Модель автомобиля" value="{{user_profile.automodel }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->{% endcomment %}
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Модель автомобиля</label>
+                        <div class="col-lg-8 fv-row">
+                            <select name="auto_model" id="model_selector" required="required">
+                                <optgroup label="">
+                                    <option disabled selected value></option>
+                                </optgroup>
+
+
+                                {% for marka in auto_marka %}
+                                    <optgroup label="{{ marka.title }}">
+                                        {% for model in marka.get_models %}
+                                            <option value="{{ model.pk }}" {% if user_profile.auto_model.pk == model.pk %}selected="selected"{% endif %}>{{ model.title }}</option>
+                                        {% endfor %}
+                                    </optgroup>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Другая марка и модель автомобиля</label>
+                        <div class="col-lg-8 fv-row">
+                            <input type="text" name="auto_markamodel_other" id="auto_markamodel_other" class="form-control form-control-lg form-control-solid" placeholder="Другая марка и модель автомобиля" value="{{user_profile.auto_markamodel_other }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Год выпуска автомобиля</label>
+                        <div class="col-lg-8 fv-row">
+                            <input required type="number" name="autogv" id="autogv" class="form-control form-control-lg form-control-solid" placeholder="Год выпуска автомобиля" value="{{user_profile.autogv }}" />
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Пробег</label>
+                        <div class="col-lg-8 fv-row">
+                            <select required name="odometer" aria-label="Выберите пробег в месяц" data-control="select2" data-placeholder="Выберите пробег в месяц..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите пробег в месяц...</option>
+                                {% for odometer in odometers %}
+                                    <option data-bs-offset="-39600" value="{{ odometer.pk }}" {% if user_profile.odometer == odometer %}selected="selected"{% endif %}>{{ odometer.title }} км</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Тип транспортного средства</label>
+                        <div class="col-lg-8 fv-row">
+                            <select required name="auto_type" id="auto_type" aria-label="Выберите тип транспортного средства" data-control="select2" data-placeholder="Выберите тип транспортного средства..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите тип транспортного средства...</option>
+                                {% for auto_type in auto_types %}
+                                    <option data-bs-offset="-39600" value="{{ auto_type.pk }}" {% if user_profile.auto_type == auto_type %}selected="selected"{% endif %}>{{ auto_type.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Страна</label>
+                        <div class="col-lg-8 fv-row">
+                            <select required name="country" aria-label="Выберите страну проживания" data-control="select2" data-placeholder="Выберите страну проживания..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите страну проживания...</option>
+                                {% for country in countries %}
+                                    <option data-bs-offset="-39600" value="{{ country.pk }}" {% if country.pk == 1 %}selected="selected"{% endif %}>{{ country.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Город</label>
+                        <div class="col-lg-8 fv-row">
+                            <select required name="city" id="city" aria-label="Выберите город проживания" data-control="select2" data-placeholder="Выберите город проживания..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите город проживания...</option>
+                                {% for city in cities %}
+                                    <option data-bs-offset="-39600" value="{{ city.pk }}" {% if city.pk == 1 %}selected="selected"{% endif %}>{{ city.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+{% comment %}                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Район</label>
+                        <div class="col-lg-8 fv-row">
+                            <select name="district" aria-label="Выберите район проживания" data-control="select2" data-placeholder="Выберите район проживания..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите район проживания...</option>
+                                {% for district in districts %}
+                                    <option data-bs-offset="-39600" value="{{ district.pk }}" {% if user_profile.district == district %}selected="selected"{% endif %}>{{ district.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>{% endcomment %}
+                    <!--end::Input group-->
+
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Районы вашего присутствия</label>
+                        <div class="col-lg-8 fv-row">
+                            <select required name="district" class="form-select form-select-solid" data-control="select2" data-placeholder="Выберите районы вашего присутствия" multiple="multiple">
+                                <option></option>
+                                {% for district in districts %}
+                                    <option data-bs-offset="-39600" value="{{ district.pk }}" {% if district in user_profile.district.all %}selected="selected"{% endif %}>{{ district.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Вид автомобиля сбоку</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8">
+                            <!--begin::Image input-->
+                            <div class="image-input image-input-outline {% if not user_profile.auto_sideview %}image-input-empty{% endif %}" data-kt-image-input="true" style="background-size: contain; background-position:center;background-image: url(/static/metronic/html/theme/demo1/dist/assets/media/svg/files/upload.svg)">
+                                <!--begin::Preview existing avatar-->
+                                <div class="image-input-wrapper w-250px h-125px" style="background-size: contain; background-position:center; {% if user_profile.auto_sideview %}background-image: url(/media/{{ user_profile.auto_sideview }}){% endif %}"></div>
+                                <!--end::Preview existing avatar-->
+                                <!--begin::Label-->
+                                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Изменить фотографию">
+                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                    <!--begin::Inputs-->
+                                    <input type="file" name="auto_sideview" accept=".png, .jpg, .jpeg" />
+                                    <input type="hidden" name="auto_sideview_image_remove" />
+                                    <!--end::Inputs-->
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Cancel-->
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Отменить загрузку">
+                                    <i class="bi bi-x fs-2"></i>
+                                </span>
+                                <!--end::Cancel-->
+                                <!--begin::Remove-->
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Удалить фотографию">
+                                    <i class="bi bi-x fs-2"></i>
+                                </span>
+                                <!--end::Remove-->
+                            </div>
+                            <!--end::Image input-->
+                            <!--begin::Hint-->
+                            <div class="form-text">Разрешенные типы файлов: png, jpg, jpeg.</div>
+                            <!--end::Hint-->
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+
+
+
+
+
+
+                    <!--begin::Input group-->
+                    {% comment %}<div class="row mb-6">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Вид автомобиля сзади</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8">
+                            <!--begin::Image input-->
+                            <div class="image-input image-input-outline {% if not user_profile.auto_rearview %}image-input-empty{% endif %}" data-kt-image-input="true" style="background-size: contain; background-position:center;background-image: url(/static/metronic/html/theme/demo1/dist/assets/media/svg/files/upload.svg)">
+                                <!--begin::Preview existing avatar-->
+                                <div class="image-input-wrapper w-250px h-125px" style="background-size: contain; background-position:center; {% if user_profile.auto_rearview %}background-image: url(/media/{{ user_profile.auto_rearview }}){% endif %}"></div>
+                                <!--end::Preview existing avatar-->
+                                <!--begin::Label-->
+                                <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Изменить фотографию">
+                                    <i class="bi bi-pencil-fill fs-7"></i>
+                                    <!--begin::Inputs-->
+                                    <input type="file" name="auto_rearview" accept=".png, .jpg, .jpeg" />
+                                    <input type="hidden" name="auto_rearview_image_remove" />
+                                    <!--end::Inputs-->
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Cancel-->
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Отменить загрузку">
+                                    <i class="bi bi-x fs-2"></i>
+                                </span>
+                                <!--end::Cancel-->
+                                <!--begin::Remove-->
+                                <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-white shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Удалить фотографию">
+                                    <i class="bi bi-x fs-2"></i>
+                                </span>
+                                <!--end::Remove-->
+                            </div>
+                            <!--end::Image input-->
+                            <!--begin::Hint-->
+                            <div class="form-text">Разрешенные типы файлов: png, jpg, jpeg.</div>
+                            <!--end::Hint-->
+                        </div>
+                        <!--end::Col-->
+                    </div>{% endcomment %}
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="d-flex flex-stack w-lg-50">
+                        <!--begin::Label-->
+                        <div class="me-5">
+                            <label class="fs-6 fw-bold form-label">Согласие на обработку персональных данных</label>
+                            <div class="fs-7 fw-bold text-muted"><a href="{% url "soglasie" %}" target="_blank">Текст соглашения на обработку персональных данных</a></div>
+                        </div>
+                        <!--end::Label-->
+
+                        <!--begin::Switch-->
+                        <label class="form-check form-check-custom form-check-solid form-check-lg">
+                            <input class="form-check-input" type="checkbox" value="1" required="required"/>
+                            <span class="form-check-label fw-bold text-muted">
+                                Согласен
+                            </span>
+                        </label>
+                        <!--end::Switch-->
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="d-flex flex-stack w-lg-50">
+                        <!--begin::Label-->
+                        <div class="me-5">
+                            <label class="fs-6 fw-bold form-label">Договор</label>
+                            <div class="fs-7 fw-bold text-muted"><a href="/media/{{ documents_settings.dogovor }}" target="_blank">Посмотреть</a></div>
+                        </div>
+                        <!--end::Label-->
+
+                        <!--begin::Switch-->
+                        <label class="form-check form-check-custom form-check-solid form-check-lg">
+                            <input class="form-check-input" type="checkbox" value="1" required="required"/>
+                            <span class="form-check-label fw-bold text-muted">
+                                Согласен
+                            </span>
+                        </label>
+                        <!--end::Switch-->
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="d-flex flex-stack w-lg-50">
+                        <!--begin::Label-->
+                        <div class="me-5">
+                            <label class="fs-6 fw-bold form-label">Пользовательское Соглашение</label>
+                            <div class="fs-7 fw-bold text-muted"><a href="/media/{{ documents_settings.soglasie }}" target="_blank">Посмотреть</a></div>
+                        </div>
+                        <!--end::Label-->
+
+                        <!--begin::Switch-->
+                        <label class="form-check form-check-custom form-check-solid form-check-lg">
+                            <input class="form-check-input" type="checkbox" value="1" required="required"/>
+                            <span class="form-check-label fw-bold text-muted">
+                                Согласен
+                            </span>
+                        </label>
+                        <!--end::Switch-->
+                    </div>
+                    <!--end::Input group-->
+
+
+                </div>
+                <!--end::Card body-->
+                <!--begin::Actions-->
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <button type="reset" class="btn btn-white btn-active-light-primary me-2">Отмена</button>
+                    <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Сохранить</button>
+                </div>
+                <!--end::Actions-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Basic info-->
+
+{% endblock %}
+
+
+{% block javascript %}
+    <script>
+        $("#model_selector").multiselectsplitter();
+        KTUtil.onDOMContentLoaded(function () {
+            Inputmask({
+                "mask": "+9(999) 999-9999"
+            }).mask("#phone");
+        });
+        $("#upload_auto_data").click(function (){
+            let th = $(this);
+            th.attr("data-kt-indicator", "on");
+            $.post( "{% url "client:upload_auto_data" %}", { license: $("#autonumber").val(), csrfmiddlewaretoken: '{{ csrf_token }}' }, function( data ) {
+                console.log(data);
+                if (data.status == "ok") {
+                    $("#autonumber").val(data.normalize_license);
+                    $("#autogv").val(data.out.year);
+                    $("#auto_markamodel_other").val(data.out.model);
+                    $("[data-multiselectsplitter-firstselect-selector]").val("Другая");
+                    $('#model_selector').multiselectsplitter('createSecondSelect');
+                    $("[data-multiselectsplitter-secondselect-selector]").val("751");
+                    $("#model_selector").val("751");
+                    $("#auto_type").val(data.out.category);
+                    $('#auto_type').trigger('change');
+                    $("#city").val(data.out.city);
+                    $('#city').trigger('change');
+                    $('#loading_autoinfo_btn').hide();
+                }
+                else {
+                    show_message(data.out, 'error');
+                }
+                th.removeAttr("data-kt-indicator");
+            });
+            //
+        });
+    </script>
+{% endblock javascript %}

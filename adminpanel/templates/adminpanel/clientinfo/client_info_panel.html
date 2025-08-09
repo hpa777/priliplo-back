@@ -1,0 +1,82 @@
+{% load thumbnail %}
+    <!-- Инфа из полей -->
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Марка автомобиля:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.auto_marka }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Модель:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.auto_model }}</span>
+    </div>
+    {% if application.client.userprofile.auto_markamodel_other != '' %}
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Марка и модель:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.auto_markamodel_other }}</span>
+    </div>
+    {% endif %}
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Год выпуска автомобиля:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.autogv }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Гос номер автомобиля:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.autonumber }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Пробег:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.odometer }} км в месяц</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Тип транспортного средства:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.auto_type }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Страна:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.country }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Город:</span>
+        <span class="text-muted text-hover-primary">{{ application.client.userprofile.city }}</span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Районы присутствия:</span>
+        <span class="text-muted text-hover-primary text-end">
+            {% for district in application.client.userprofile.district.all %}
+                <div class="text-end">{{ district.title }}</div>
+            {% endfor %}
+        </span>
+    </div>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Вид автомобиля сбоку:</span>
+        <div class="text-muted text-hover-primary">
+            <!--begin::Overlay-->
+            <a class="d-block overlay" data-fslightbox="lightbox-basic" href="/media/{{ application.client.userprofile.auto_sideview }}">
+                <!--begin::Image-->
+                {% thumbnail application.client.userprofile.auto_sideview "100x100" crop="center" as auto_sideview %}
+                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-100px min-w-100px"
+                     style="background-image:url('{{ auto_sideview.url }}')">
+                </div>
+                {% endthumbnail %}
+                <!--end::Image-->
+            </a>
+            <!--end::Overlay-->
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <span class="font-weight-bold mr-2">Вид автомобиля сзади:</span>
+        <div class="text-muted text-hover-primary">
+            <!--begin::Overlay-->
+            <a class="d-block overlay" data-fslightbox="lightbox-basic" href="/media/{{ application.client.userprofile.auto_rearview }}">
+                <!--begin::Image-->
+                {% thumbnail application.client.userprofile.auto_rearview "100x100" crop="center" as auto_rearview %}
+                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-100px min-w-100px"
+                     style="background-image:url('{{ auto_rearview.url }}')">
+                </div>
+                {% endthumbnail %}
+                <!--end::Image-->
+            </a>
+            <!--end::Overlay-->
+        </div>
+    </div>
+

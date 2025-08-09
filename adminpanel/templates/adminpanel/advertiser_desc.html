@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Подробная информация о рекламодателе{% endblock title %}
+
+{% block content %}
+<!--begin::Navbar-->
+<div class="card mb-8">
+    <div class="card-body pt-9 pb-0">
+        <!--begin::Details-->
+        <div class="d-flex flex-wrap flex-sm-nowrap mb-6">
+            <!--begin::Image-->
+            <div class="d-flex flex-center flex-shrink-0 bg-light rounded w-100px h-100px w-lg-150px h-lg-150px me-7 mb-4">
+                <img class="mw-100px mw-lg-150px" src="/media/{{ object.company_logo }}" alt="{{object.company_name}}" />
+            </div>
+            <!--end::Image-->
+            <!--begin::Wrapper-->
+            <div class="flex-grow-1">
+                <!--begin::Head-->
+                <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                    <!--begin::Details-->
+                    <div class="d-flex flex-column">
+                        <!--begin::Status-->
+                        <div class="d-flex align-items-center mb-1">
+                            <a class="text-gray-800 text-hover-primary fs-2 fw-bolder me-3">{{object.company_name}}</a>
+                            <span class="badge badge-light-success me-auto">{{object.short_description}}</span>
+                        </div>
+                        <!--end::Status-->
+                        <!--begin::Description-->
+                        <div class="fw-bold mb-4 fs-5 text-gray-400">{{object.company_description|urlize|linebreaksbr}}</div>
+                        <!--end::Description-->
+                    </div>
+                    <!--end::Details-->
+                    <!--begin::Actions-->
+
+                    <!--end::Actions-->
+                </div>
+                <!--end::Head-->
+                <!--begin::Info-->
+                <div class="d-flex flex-wrap justify-content-start">
+                    <!--begin::Stats-->
+                    <div class="d-flex flex-wrap">
+                        <!--begin::Stat-->
+                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bolder">
+                                    {{object.company_fio}}<br>
+                                    {{object.company_phone}}<br>
+                                    <a href="mailto:{{object.owner_user.username}}">{{object.owner_user.username}}</a><br>
+                                </div>
+                            </div>
+                            <div class="fw-bold fs-6 text-gray-400">Контакты</div>
+                        </div>
+                        <!--end::Stat-->
+
+                        <!--begin::Stat-->
+                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bolder">{{object.company_inn}}</div>
+                            </div>
+                            <div class="fw-bold fs-6 text-gray-400">ИНН</div>
+                        </div>
+                        <!--end::Stat-->
+
+                        <!--begin::Stat-->
+                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bolder">{{object.balance}} р.</div>
+                            </div>
+                            <div class="fw-bold fs-6 text-gray-400">Баланс</div>
+                        </div>
+                        <!--end::Stat-->
+
+                        <!--begin::Stat-->
+                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bolder">
+                                    {{object.kassir_login}}<br>
+                                    <span class="cursor-pointer text-muted" onclick="$(this).text($(this).data('pass'))" data-pass="{{object.kassir_password}}">Показать пароль</span>
+                                </div>
+                            </div>
+                            <div class="fw-bold fs-6 text-gray-400">Реквизиты кассира</div>
+                        </div>
+                        <!--end::Stat-->
+
+
+
+                    </div>
+                    <!--end::Stats-->
+
+                </div>
+                <!--end::Info-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Details-->
+        <div class="separator"></div>
+
+    </div>
+</div>
+<!--end::Navbar-->
+<!--begin::Modals-->
+
+    <!--begin::Toolbar-->
+    <div class="d-flex flex-wrap flex-stack pb-7">
+        <!--begin::Title-->
+        <div class="d-flex flex-wrap align-items-center my-1">
+            <h3 class="fw-bolder me-5 my-1">Акции ({{ object.campaigns_count }})</h3>
+        </div>
+        <!--end::Title-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+
+
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable" id="">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 w-100px">&nbsp;</th>
+                                        <th class="p-0 w-150px text-center">Даты проведения</th>
+                                        <th class="p-0 min-w-250px text-center">Название</th>
+                                        <th class="p-0 w-250px text-center">Квота участников</th>
+                                        <th class="p-0 w-250px text-center">Участников</th>
+                                        <th class="p-0 w-200px text-center">Вознаграждение</th>
+                                        <th class="p-0 w-100px text-center">Статус</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for campaign in object.campaign_set.all %}
+                                        <tr>
+                                            <td>
+                                                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="/media/{{ campaign.campaign_image }}">
+                                                <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-50px w-100px"
+                                                     style="background-image:url('/media/{{ campaign.campaign_image }}')">
+                                                </div>
+                                                </a>
+                                            </td>
+                                            <td class="text-center lh-1">
+                                                <small>
+                                                    {{ campaign.created_date }}<br>&mdash;<br>{{ campaign.end_date }}
+                                                </small>
+                                            </td>
+                                            <td class="text-center text-muted fw-bold">
+                                                {{ campaign.title }}<br>
+                                                <button class="btn btn-sm btn-active-light-info" data-bs-toggle="popover" data-bs-dismiss="true" data-bs-placement="top" title="Описание" data-bs-content="{{ campaign.short_description }}">Описание</button>
+                                            </td>
+                                            <td class="text-center text-muted fw-bold">{{ campaign.quota }}</td>
+                                            <td class="text-center text-muted fw-bold">{{ campaign.active_applications_count }}</td>
+                                            <td class="text-center text-muted fw-bold">{{ campaign.award }}</td>
+                                            <td class="text-center">
+                                                <span class="badge {% if campaign.campaign_status == 1 %}badge-light-primary{% elif campaign.campaign_status == 2 %}badge-light-success{% elif campaign.campaign_status == 3 %}badge-light-danger{% elif campaign.campaign_status == 4 %}badge-secondary{% elif campaign.campaign_status == 5 %}badge-light{% endif %}">
+                                                    {{ campaign.get_campaign_status_display }}
+                                                </span>
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+        <!--end::Tab pane-->
+    </div>
+    <!--end::Tab Content-->
+    <!--end::Modals-->
+
+
+
+
+{% endblock content %}
+
+{% block css %}
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+
+    <script>
+        var datatable = $('.kt_datatable').dataTable( {
+            ordering:  false,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
+            }
+        } );
+    </script>
+{% endblock javascript %}

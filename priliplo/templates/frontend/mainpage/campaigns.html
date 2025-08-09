@@ -1,0 +1,64 @@
+{% load thumbnail %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<!--begin::Head-->
+{% include "frontend/layout/header.html" %}
+<!--end::Head-->
+
+<!--begin::Body-->
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled">
+
+<!--begin::Root-->
+<div class="d-flex flex-column flex-root">
+    <!--begin::Page-->
+    <div class="page d-flex flex-row flex-column-fluid">
+        <!--begin::Wrapper-->
+        <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+
+            {% include "frontend/layout/header/_base.html" %}
+
+            <div class="separator border-gray-400 mb-10"></div>
+
+            <!--begin::Container-->
+            <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+                <!--begin::Post-->
+                <div class="content flex-row-fluid" id="kt_content">
+
+                    {% include "frontend/layout/header/_breadcrumbs.html" %}
+
+                    <!--begin::Row-->
+                    <div class="row gy-0 gx-10">
+                        <div class="col-lg-12">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center mb-1">
+                                    <h1 class="text-gray-800 fw-bolder me-3 pb-10">{{ title_1 }}</h1>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Список акций -->
+                    {% include "frontend/partials/widgets-2/general/_widget-campaigns.html" %}
+                    <!-- < Список акций -->
+                </div>
+                <!--end::Post-->
+            </div>
+            <!--end::Container-->
+
+            {% include "frontend/layout/_footer.html" %}
+
+        </div>
+        <!--end::Wrapper-->
+    </div>
+    <!--end::Page-->
+</div>
+<!--end::Root-->
+
+{% include "frontend/partials/_scrolltop.html" %}
+{% include "frontend/layout/_javascript.html" %}
+
+</body>
+<!--end::Body-->
+</html>

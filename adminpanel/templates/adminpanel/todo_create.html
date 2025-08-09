@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Создать задачу{% endblock title %}
+
+
+{% block content %}
+    <!--begin::Basic info-->
+    <div class="card mb-5 mb-xl-10">
+        <!--begin::Card header-->
+        <div class="card-header border-0 " data-bs-target="#kt_task_details" aria-expanded="true" aria-controls="kt_task_details">
+            <!--begin::Card title-->
+            <div class="card-title m-0">
+                {% if form_type == 'edit' %}
+                    <h3 class="fw-bolder m-0">Редактирование задачи</h3>
+                {% else %}
+                    <h3 class="fw-bolder m-0">Создание задачи</h3>
+                {% endif %}
+            </div>
+            <!--end::Card title-->
+        </div>
+        <!--begin::Card header-->
+        <!--begin::Content-->
+        <div id="kt_task_details" >
+            <!--begin::Form-->
+
+            <form id="create_task_form" class="form" action="{% url "adminpanel:save_task_data" %}" method="post"  enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form_type == 'edit' %}
+                    <input type="hidden" name="id" value="{{ obj_id }}">
+                {% endif %}
+
+                <!--begin::Card body-->
+                <div class="card-body border-top p-9">
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Название задачи</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8 fv-row">
+                            <input type="text" name="title" class="form-control form-control-lg form-control-solid" placeholder="Название задачи" value="{{ form.data.title }}" />
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <!--begin::Label-->
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Описание задачи</label>
+                        <!--end::Label-->
+                        <!--begin::Col-->
+                        <div class="col-lg-8 fv-row">
+                            <textarea class="form-control form-control-solid" rows="3" name="description" placeholder="Описание задачи">{{ form.data.description }}</textarea>
+                        </div>
+                        <!--end::Col-->
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Группа задач</label>
+                        <div class="col-lg-8 fv-row">
+                            <select name="task_group" id="task_group" aria-label="Выберите группу задач" data-allow-clear="true" data-control="select2" data-placeholder="Выберите группу задач..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите группу задач...</option>
+                                {% for group in task_group %}
+                                    <option data-bs-offset="-39600" value="{{ group.pk }}" {% if group.pk == form.data.task_group.pk %}selected="selected"{% endif %}>{{ group }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Автовладелец</label>
+                        <div class="col-lg-8 fv-row">
+                            <select name="client" id="client" aria-label="Выберите автовладельца" data-allow-clear="true" data-control="select2" data-placeholder="Выберите автовладельца..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите автовладельца...</option>
+                                {% for client in clients %}
+                                    <option data-bs-offset="-39600" data-campaigns="{% for c in client.user.campaignapplication_set.all %}{{c.campaign.pk}},{% endfor %}" value="{{ client.user.pk }}" {% if client.user.pk == form.data.client.pk %}selected="selected"{% endif %}>{{ client.get_full_name }} - {{ client.phone }} - {{ client.user.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Рекламодатель</label>
+                        <div class="col-lg-8 fv-row">
+                            <select name="advertiser" id="advertiser" aria-label="Выберите рекламодателя" data-allow-clear="true" data-control="select2" data-placeholder="Выберите рекламодателя..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите рекламодателя...</option>
+                                {% for advertiser in advertisers %}
+                                    <option data-bs-offset="-39600" data-campaigns="{% for c in advertiser.campaign_set.all %}{{c.pk}},{% endfor %}" value="{{ advertiser.pk }}" {% if advertiser.pk == form.data.advertiser.pk %}selected="selected"{% endif %}>{{ advertiser.company_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+
+                    <!--begin::Input group-->
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Акция</label>
+                        <div class="col-lg-8 fv-row">
+                            <select name="campaign" id="campaign" aria-label="Выберите акцию" data-allow-clear="true" data-control="select2" data-placeholder="Выберите акцию..." class="form-select form-select-solid form-select-lg">
+                                <option value="">Выберите акцию...</option>
+                                {% for campaign in campaigns %}
+                                    <option data-bs-offset="-39600" data-clients="{% for c in campaign.campaignapplication_set.all %}{{c.client.pk}},{% endfor %}" data-advertiser="{{campaign.advertiser.pk}}" value="{{ campaign.pk }}" {% if campaign.pk == form.data.campaign.pk %}selected="selected"{% endif %}>{{ campaign }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+
+                    <div class="row mb-6">
+                        <label class="col-lg-4 col-form-label fw-bold fs-6">Планируемая дата завершения</label>
+                        <!--begin::Col-->
+                        <div class="col-lg-8 fv-row">
+                            <div class="position-relative d-flex align-items-center">
+                                <!--begin::Svg Icon | path: icons/duotone/Interface/Calendar.svg-->
+                                <span class="svg-icon position-absolute ms-4 mb-1 svg-icon-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path opacity="0.25" fill-rule="evenodd" clip-rule="evenodd" d="M6 3C6 2.44772 6.44772 2 7 2C7.55228 2 8 2.44772 8 3V4H16V3C16 2.44772 16.4477 2 17 2C17.5523 2 18 2.44772 18 3V4H19C20.6569 4 22 5.34315 22 7V19C22 20.6569 20.6569 22 19 22H5C3.34315 22 2 20.6569 2 19V7C2 5.34315 3.34315 4 5 4H6V3Z" fill="#191213" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 12C9.44772 12 9 12.4477 9 13C9 13.5523 9.44772 14 10 14H17C17.5523 14 18 13.5523 18 13C18 12.4477 17.5523 12 17 12H10ZM7 16C6.44772 16 6 16.4477 6 17C6 17.5523 6.44772 18 7 18H13C13.5523 18 14 17.5523 14 17C14 16.4477 13.5523 16 13 16H7Z" fill="#121319" />
+                                    </svg>
+                                </span>
+                                <!--end::Svg Icon-->
+                                <input class="form-control form-control-solid ps-12" name="plane_finish_date" placeholder="Выберите дату окончания задачи" value="{% if form.data.plane_finish_date != None %}{{ form.data.plane_finish_date|date:"d-m-Y H:i" }}{% endif %}" id="plane_finish_date" />
+
+                                <div class="position-absolute translate-middle-y top-50 end-0 me-3 cursor-pointer" onclick='$("#plane_finish_date").flatpickr().clear()'>
+                                    <i class="fas fa-times"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!--begin::Col-->
+                    </div>
+                    <!--end::Row-->
+
+
+                </div>
+                <!--end::Card body-->
+                <!--begin::Actions-->
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    {% if form_type == 'edit' %}
+                        <a href="{% url "adminpanel:todo_list" %}" class="btn btn-white btn-active-light-primary me-2">Отмена</a>
+                    {% else %}
+                        <button type="reset" class="btn btn-white btn-active-light-primary me-2">Отмена</button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-primary" id="create_campaign_form_submit">Сохранить</button>
+                </div>
+                <!--end::Actions-->
+            </form>
+            <!--end::Form-->
+        </div>
+        <!--end::Content-->
+    </div>
+    <!--end::Basic info-->
+{% endblock content %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block javascript %}
+
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+
+
+    <script>
+
+        $(document).ready(function() {
+            $("#plane_finish_date").flatpickr({
+                enableTime: true,
+                time_24hr: true,
+                minDate: "today",
+                dateFormat: "d-m-Y H:i",
+                "locale": "ru",
+            });
+
+            $('#client').select2({
+                  sorter: function(data) {
+                      let top_list = [];
+                      let bottom_list = [];
+                      let selected_clients = $('#campaign').find(':selected');
+
+                      if (selected_clients.val() !== "") {
+                          data.forEach(function(item){
+                                  let selected_items = selected_clients.data("clients").split(",");
+                                  if (selected_items.includes(item.id)) {
+                                      top_list.push(item);
+                                  } else {
+                                      bottom_list.push(item);
+                                  }
+                          });
+                          return [ ...top_list, ...bottom_list ];
+                      } else {
+                          return data;
+                      }
+
+                  },
+                  templateResult: function (state) {
+
+                        if (!state.id) {
+                            return state.text;
+                        }
+                        let badges = "";
+                        let $state;
+
+                        let selected_clients = $('#campaign').find(':selected');
+                        if (selected_clients.val() !== "") {
+                            let selected_items = selected_clients.data("clients").split(",");
+                            if (selected_items.includes(state.id)) {
+                                badges += '<span class="badge badge-circle badge-success ms-2"><i class="fa fa-check text-white"></i></span>';
+                            }
+                        }
+
+                      $state = $('<span>' + state.text + " " + badges+ '</span>');
+                      return $state;
+                  }
+            });
+
+            $('#advertiser').select2({
+                  templateResult: function (state) {
+                        let selected = $('#campaign').find(':selected');
+                        if ((!state.id) || (selected.val() === "")) {
+                            return state.text;
+                        }
+                        let selected_item = selected.data("advertiser");
+                        let $state;
+                        if (selected_item == state.id) {
+                            $state = $('<span>' + state.text + ' <span class="badge badge-circle badge-success ms-2"><i class="fa fa-check text-white"></i></span></span>');
+                        }
+                        else
+                            $state = state.text;
+                        return $state;
+                  }
+            });
+
+            $('#campaign').select2({
+                  templateResult: function (state) {
+
+                        if (!state.id) {
+                            return state.text;
+                        }
+                        let badges = "";
+                        let $state;
+
+                        let selected_campaigns = $('#client').find(':selected');
+                        if (selected_campaigns.val() !== "") {
+                            let selected_items = selected_campaigns.data("campaigns").split(",");
+                            if (selected_items.includes(state.id)) {
+                                badges += '<span class="badge badge-circle badge-success ms-2"><i class="fa fa-check text-white"></i></span>';
+                            }
+                        }
+
+                        let selected_advertisers = $('#advertiser').find(':selected');
+                        if (selected_advertisers.val() !== "") {
+                            let selected_advertiser_items = selected_advertisers.data("campaigns").split(",");
+                            if (selected_advertiser_items.includes(state.id)) {
+                                badges += '<span class="badge badge-circle badge-warning ms-2"><i class="fa fa-check text-white"></i></span>';
+                            }
+                        }
+                        // else
+                        //     $state = state.text;
+                      $state = $('<span>' + state.text + " " + badges+ '</span>');
+                      return $state;
+                  }
+            });
+
+/*            $("#client").change(function(){
+                let selected = $(this).find(':selected');
+                let cur_value = selected.val();
+                $("#select2-client-results li").removeClass("bg-success");
+                if (cur_value !== '') {
+                    let arr = selected.data("campaigns").split(",");
+                    arr.pop();
+                    arr.forEach((element) => {
+                      $("#select2-campaign-results li[id$='-" + element + "']").addClass("bg-success");
+                    });
+                }
+            })*/
+        });
+    </script>
+{% endblock javascript %}

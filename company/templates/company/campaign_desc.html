@@ -1,0 +1,806 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Подробная информация об акции{% endblock title %}
+
+{% block content %}
+    <div class="modal fade" tabindex="-1" id="request_application_decline_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form class="needs-validation" id="request_application_decline_form" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="request_application_decline_id" value="">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подтверждение отказа клиенту</h5>
+
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Введите причину отказа" id="decline_note" name="decline_note" style="height: 100px" required></textarea>
+                            <label for="floatingTextarea2">Причина отказа</label>
+                        </div>
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-danger">Отказать</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+<!--begin::Navbar-->
+<div class="card mb-8">
+    <div class="card-body pt-9 pb-0">
+        <!--begin::Details-->
+        <div class="d-flex flex-wrap flex-sm-nowrap mb-6">
+            <!--begin::Image-->
+            <div class="d-flex flex-center flex-shrink-0 bg-light rounded w-100px h-100px w-lg-200px h-lg-200px me-7 mb-4">
+                {% thumbnail object.campaign_image "200" as im %}
+                    <img src="{{ im.url }}" alt="image" class="img-fluid" />
+                {% endthumbnail %}
+            </div>
+            <!--end::Image-->
+            <!--begin::Wrapper-->
+            <div class="flex-grow-1">
+                <!--begin::Head-->
+                <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                    <!--begin::Details-->
+                    <div class="d-flex flex-column">
+                        <!--begin::Status-->
+                        <div class="d-flex align-items-center mb-1">
+                            <a href="#" class="text-gray-800 text-hover-primary fs-2 fw-bolder me-3">{{object.title}}</a>
+                        </div>
+                        <!--end::Status-->
+                        <!--begin::Description-->
+                        <div class="d-flex flex-wrap fw-bold mb-4 fs-5 text-gray-400">{{object.short_description}}</div>
+                        <!--end::Description-->
+                    </div>
+                    <!--end::Details-->
+                    <!--begin::Actions-->
+
+                    <!--end::Actions-->
+                </div>
+                <!--end::Head-->
+                <!--begin::Info-->
+                <div class="d-flex flex-wrap justify-content-start">
+                    <!--begin::Stats-->
+                    <div class="d-flex flex-wrap">
+                        <!--begin::Stat-->
+                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                            <!--begin::Number-->
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bolder">{{object.award}}</div>
+                            </div>
+                            <!--end::Number-->
+                            <!--begin::Label-->
+                            <div class="fw-bold fs-6 text-gray-400">Бонусы за 14 дней</div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Stat-->
+                        <!--begin::Stat-->
+                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                            <!--begin::Number-->
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bolder">{{object.end_date|date:"d E Y"}}</div>
+                            </div>
+                            <!--end::Number-->
+                            <!--begin::Label-->
+                            <div class="fw-bold fs-6 text-gray-400">Дата окончания приема заявок от участников</div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Stat-->
+                        <!--begin::Stat-->
+                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                            <!--begin::Number-->
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bolder">{{object.quota}}</div>
+                            </div>
+                            <!--end::Number-->
+                            <!--begin::Label-->
+                            <div class="fw-bold fs-6 text-gray-400">Требуется автомобилей</div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Stat-->
+                        <!--begin::Stat-->
+                        <div class="border border-gray-300 border-dashed rounded min-w-125px py-3 px-4 me-6 mb-3">
+                            <!--begin::Number-->
+                            <div class="d-flex align-items-center">
+                                <div class="fs-4 fw-bolder">{{object.get_applications_quota}}</div>
+                            </div>
+                            <!--end::Number-->
+                            <!--begin::Label-->
+                            <div class="fw-bold fs-6 text-gray-400">Осталось заявок</div>
+                            <!--end::Label-->
+                        </div>
+                        <!--end::Stat-->
+
+                    </div>
+                    <!--end::Stats-->
+
+                </div>
+                <!--end::Info-->
+            </div>
+            <!--end::Wrapper-->
+        </div>
+        <!--end::Details-->
+        <div class="separator"></div>
+
+    </div>
+</div>
+<!--end::Navbar-->
+<!--begin::Modals-->
+
+<!--end::Modals-->
+<!--begin::Toolbar-->
+<div class="d-flex flex-wrap flex-stack pb-7">
+    <!--begin::Title-->
+    <div class="d-flex flex-wrap align-items-center my-1">
+        <h3 class="fw-bolder me-5 my-1">Участники ({{ active_applications.count }})</h3>
+    </div>
+    <!--end::Title-->
+</div>
+<!--end::Toolbar-->
+<!--begin::Tab Content-->
+<div class="tab-content">
+    <!--begin::Tab pane-->
+
+    <div class="col-xl-12">
+
+
+        <!--begin::Tables Widget 5-->
+        <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+            <!--begin::Body-->
+
+            <div class="card-body py-3">
+                <div class="tab-content">
+                    <div class="table-responsive">
+                        <!--begin::Table-->
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable" id="">
+                                <!--begin::Table head-->
+                                <thead>
+                                <tr class="">
+                                    <th class="w-100px">&nbsp;</th>
+                                    <th class="p-0 min-w-250px ">Имя</th>
+                                    <th class="p-0 w-250px text-center">Автомобиль</th>
+                                    <th class="p-0 w-200px text-center">Пробег (км в месяц)</th>
+                                    <th class="p-0 w-150px">&nbsp;</th>
+                                </tr>
+                                </thead>
+                                <!--end::Table head-->
+                                <!--begin::Table body-->
+                                <tbody>
+
+                                {% for application in active_applications %}
+                                <tr>
+                                    <td>
+                                        {% thumbnail application.client.userprofile.auto_sideview "100x100" crop="center" as im %}
+                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-50px w-100px"
+                                                 style="background-image:url('{{ im.url }}')">
+                                            </div>
+                                        {% endthumbnail %}
+                                    </td>
+                                    <td>
+                                        <a id="request_applications_user_id{{ application.pk }}" class="text-dark fw-bolder text-hover-primary mb-1 fs-6 cursor-pointer">{{ application.client.userprofile.get_full_name }}</a>
+                                    </td>
+
+                                    <td class="text-center text-muted fw-bold">
+                                        {{ application.client.userprofile.auto_marka }} {{ application.client.userprofile.auto_model }}
+                                        {% if application.client.userprofile.auto_markamodel_other != '' %}
+                                                <br>{{ application.client.userprofile.auto_markamodel_other }}
+                                        {% endif %}
+                                        ({{ application.client.userprofile.autogv }})
+                                    </td>
+                                    <td class="text-center text-muted fw-bold">{{ application.client.userprofile.odometer }}км в месяц</td>
+                                    <td class="text-end">&nbsp;</td>
+                                </tr>
+
+                                {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+                                <!--begin: Datatable-->
+                                {% comment %}<div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>{% endcomment %}
+                                {% comment %}<table id="kt_datatable"></table>{% endcomment %}
+                                <!--end: Datatable-->
+
+
+
+                                </tbody>
+                                <!--end::Table body-->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Tables Widget 5-->
+    </div>
+
+
+
+
+
+
+
+
+
+    <!--end::Tab pane-->
+
+</div>
+<!--end::Tab Content-->
+
+
+
+
+
+    {% for application in active_applications %}
+
+        <!--begin::Инфа о пользователе-->
+        <div id="request_applications_userinfo_id{{ application.pk }}" class="bg-white" data-kt-drawer="true" data-kt-drawer-activate="true" data-kt-drawer-toggle="#request_applications_user_id{{ application.pk }}" data-kt-drawer-close="#request_applications_user_id{{ application.pk }}_close" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}">
+        <div class="card w-100">
+            <div class="card-header pe-5">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1">{{ application.client.userprofile.get_full_name }}</a>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary" id="request_applications_user_id{{ application.pk }}_close">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body hover-scroll-overlay-y">
+                {% include "./clientinfo/client_info_panel.html" with application=application %}
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-2">
+                        <button class="btn btn-light-warning" data-kt-drawer-dismiss="true">Закрыть</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        </div>
+        <!--end::Инфа о пользователе-->
+    {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--begin::Toolbar-->
+<div class="d-flex flex-wrap flex-stack pb-7">
+    <!--begin::Title-->
+    <div class="d-flex flex-wrap align-items-center my-1">
+        <h3 class="fw-bolder me-5 my-1">Запросы на участие ({{ request_applications.count }})</h3>
+    </div>
+    <!--end::Title-->
+</div>
+<!--end::Toolbar-->
+<!--begin::Tab Content-->
+<div class="tab-content">
+    <!--begin::Tab pane-->
+
+    <div class="col-xl-12">
+
+
+        <!--begin::Tables Widget 5-->
+        <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+            <!--begin::Body-->
+
+            <div class="card-body py-3">
+                <div class="tab-content">
+                    <div class="table-responsive">
+                        <!--begin::Table-->
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable">
+                                <!--begin::Table head-->
+                                <thead>
+                                <tr class="">
+                                    <th class="w-100px">&nbsp;</th>
+                                    <th class="p-0 min-w-250px ">Имя</th>
+                                    <th class="p-0 w-250px text-center">Автомобиль</th>
+                                    <th class="p-0 w-200px text-center">Пробег (км в месяц)</th>
+                                    <th class="p-0 w-150px">&nbsp;</th>
+                                </tr>
+                                </thead>
+                                <!--end::Table head-->
+                                <!--begin::Table body-->
+                                <tbody>
+
+                                {% for application in request_applications %}
+                                <tr>
+                                    <td>
+                                        {% thumbnail application.client.userprofile.auto_sideview "100x100" crop="center" as im %}
+                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-50px w-100px"
+                                                 style="background-image:url('{{ im.url }}')">
+                                            </div>
+                                        {% endthumbnail %}
+
+                                    </td>
+                                    <td>
+                                        <a id="request_applications_user_id{{ application.pk }}" class="text-dark fw-bolder text-hover-primary mb-1 fs-6 cursor-pointer">{{ application.client.userprofile.get_full_name }}</a>
+                                    </td>
+                                    <td class="text-center text-muted fw-bold">{{ application.client.userprofile.auto_marka }} {{ application.client.userprofile.auto_model }} ({{ application.client.userprofile.autogv }}) </td>
+                                    <td class="text-center text-muted fw-bold">{{ application.client.userprofile.odometer }}</td>
+
+                                    <td class="text-end">
+                                        <a class="btn btn-danger btn-sm btn-icon cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Отклонить запрос" onclick="show_request_application_decline_modal('{{ application.pk }}')"><i class="fas fa-ban fs-4"></i></a>
+                                        <a class="btn btn-success btn-sm btn-icon cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Принять запрос" onclick="approve_form('{{ application.pk }}');"><i class="fas fa-check fs-4"></i></a>
+                                    </td>
+
+
+                                </tr>
+
+                                {% endfor %}
+
+
+
+
+
+                                </tbody>
+                                <!--end::Table body-->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Body-->
+        </div>
+        <!--end::Tables Widget 5-->
+    </div>
+
+
+
+
+
+
+
+
+
+    <!--end::Tab pane-->
+
+</div>
+<!--end::Tab Content-->
+
+
+
+
+
+
+
+    {% for application in request_applications %}
+
+        <!--begin::Инфа о пользователе-->
+        <div id="request_applications_userinfo_id{{ application.pk }}" class="bg-white" data-kt-drawer="true" data-kt-drawer-activate="true" data-kt-drawer-toggle="#request_applications_user_id{{ application.pk }}" data-kt-drawer-close="#request_applications_user_id{{ application.pk }}_close" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}">
+        <div class="card w-100">
+            <div class="card-header pe-5">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1">{{ application.client.userprofile.get_full_name }}</a>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary" id="request_applications_user_id{{ application.pk }}_close">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body hover-scroll-overlay-y">
+                {% include "./clientinfo/client_info_panel.html" with application=application %}
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-2">
+                        <button class="btn btn-light-warning" data-kt-drawer-dismiss="true">Закрыть</button>
+                    </div>
+                    <div class="col-10 text-end">
+                        <button class="btn btn-danger me-md-2" type="button" onclick="show_request_application_decline_modal('{{ application.pk }}');"><i class="fas fa-ban fs-4"></i> Отклонить</button>
+                        <button class="btn btn-success" type="button" onclick="approve_form('{{ application.pk }}');"><i class="fas fa-check fs-4"></i> Принять</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        </div>
+        <!--end::Инфа о пользователе-->
+    {% endfor %}
+
+
+
+
+
+
+
+    <!--begin::Toolbar-->
+    <div class="d-flex flex-wrap flex-stack pb-7">
+        <!--begin::Title-->
+        <div class="d-flex flex-wrap align-items-center my-1">
+            <h3 class="fw-bolder me-5 my-1">На оклейке автомобиля ({{ sticker_applications.count }})</h3>
+        </div>
+        <!--end::Title-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+
+
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable" id="">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="w-100px">&nbsp;</th>
+                                        <th class="p-0 min-w-250px ">Имя</th>
+                                        <th class="p-0 w-250px text-center">Автомобиль</th>
+                                        <th class="p-0 w-200px text-center">Пробег (км в месяц)</th>
+                                        <th class="p-0 w-150px">&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for application in sticker_applications %}
+                                        <tr>
+                                            <td>
+                                                {% thumbnail application.client.userprofile.auto_sideview "100x100" crop="center" as im %}
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-50px w-100px"
+                                                         style="background-image:url('{{ im.url }}')">
+                                                    </div>
+                                                {% endthumbnail %}
+
+                                            </td>
+                                            <td>
+                                                <a id="request_applications_user_id{{ application.pk }}" class="text-dark fw-bolder text-hover-primary mb-1 fs-6 cursor-pointer">{{ application.client.userprofile.get_full_name }}</a>
+                                            </td>
+                                            <td class="text-center text-muted fw-bold">
+                                                {{ application.client.userprofile.auto_marka }} {{ application.client.userprofile.auto_model }} ({{ application.client.userprofile.autogv }}) </td>
+                                            <td class="text-center text-muted fw-bold">{{ application.client.userprofile.odometer }}км в месяц</td>
+                                            <td class="text-end">&nbsp;</td>
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+                                    <!--begin: Datatable-->
+                                    {% comment %}<div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>{% endcomment %}
+                                    {% comment %}<table id="kt_datatable"></table>{% endcomment %}
+                                    <!--end: Datatable-->
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+
+
+
+
+
+
+
+
+
+        <!--end::Tab pane-->
+
+    </div>
+    <!--end::Tab Content-->
+
+
+
+
+
+
+
+
+    {% for application in sticker_applications %}
+
+        <!--begin::Инфа о пользователе-->
+        <div id="request_applications_userinfo_id{{ application.pk }}" class="bg-white" data-kt-drawer="true" data-kt-drawer-activate="true" data-kt-drawer-toggle="#request_applications_user_id{{ application.pk }}" data-kt-drawer-close="#request_applications_user_id{{ application.pk }}_close" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}">
+        <div class="card w-100">
+            <div class="card-header pe-5">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1">{{ application.client.userprofile.get_full_name }}</a>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary" id="request_applications_user_id{{ application.pk }}_close">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body hover-scroll-overlay-y">
+                {% include "./clientinfo/client_info_panel.html" with application=application %}
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-2">
+                        <button class="btn btn-light-warning" data-kt-drawer-dismiss="true">Закрыть</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        </div>
+        <!--end::Инфа о пользователе-->
+    {% endfor %}
+
+
+
+    <!-- Получившие баллы -->
+
+
+    <!--begin::Toolbar-->
+    <div class="d-flex flex-wrap flex-stack pb-7">
+        <!--begin::Title-->
+        <div class="d-flex flex-wrap align-items-center my-1">
+            <h3 class="fw-bolder me-5 my-1">Получившие баллы ({{ finished_applications.count }})</h3>
+        </div>
+        <!--end::Title-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+
+
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable" id="">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="w-100px">&nbsp;</th>
+                                        <th class="p-0 min-w-250px ">Имя</th>
+                                        <th class="p-0 w-250px text-center">Автомобиль</th>
+                                        <th class="p-0 w-200px text-center">Пробег (км в месяц)</th>
+                                        <th class="p-0 w-150px">&nbsp;</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for application in finished_applications %}
+                                        <tr>
+                                            <td>
+                                                {% thumbnail application.client.userprofile.auto_sideview "100x100" crop="center" as im %}
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-50px w-100px"
+                                                         style="background-image:url('{{ im.url }}')">
+                                                    </div>
+                                                {% endthumbnail %}
+
+                                            </td>
+                                            <td>
+                                                <a id="request_applications_user_id{{ application.pk }}" class="text-dark fw-bolder text-hover-primary mb-1 fs-6 cursor-pointer">{{ application.client.userprofile.get_full_name }}</a>
+                                            </td>
+                                            <td class="text-center text-muted fw-bold">
+                                                {{ application.client.userprofile.auto_marka }} {{ application.client.userprofile.auto_model }} ({{ application.client.userprofile.autogv }}) </td>
+                                            <td class="text-center text-muted fw-bold">{{ application.client.userprofile.odometer }}км в месяц</td>
+                                            <td class="text-end">&nbsp;</td>
+                                        </tr>
+
+                                    {% endfor %}
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+
+        <!--end::Tab pane-->
+    </div>
+    <!--end::Tab Content-->
+
+    {% for application in finished_applications %}
+
+        <!--begin::Инфа о пользователе-->
+        <div id="request_applications_userinfo_id{{ application.pk }}" class="bg-white" data-kt-drawer="true" data-kt-drawer-activate="true" data-kt-drawer-toggle="#request_applications_user_id{{ application.pk }}" data-kt-drawer-close="#request_applications_user_id{{ application.pk }}_close" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'300px', 'md': '500px'}">
+        <div class="card w-100">
+            <div class="card-header pe-5">
+                <div class="card-title">
+                    <div class="d-flex justify-content-center flex-column me-3">
+                        <a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 lh-1">{{ application.client.userprofile.get_full_name }}</a>
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="btn btn-sm btn-icon btn-active-light-primary" id="request_applications_user_id{{ application.pk }}_close">
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body hover-scroll-overlay-y">
+                {% include "./clientinfo/client_info_panel.html" with application=application %}
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-2">
+                        <button class="btn btn-light-warning" data-kt-drawer-dismiss="true">Закрыть</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+        </div>
+        <!--end::Инфа о пользователе-->
+    {% endfor %}
+
+
+
+
+
+
+{% endblock content %}
+
+{% block css %}
+{#    <link href="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css"/>#}
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block javascript %}
+    {% comment %}<script src="https://preview.keenthemes.com/metronic/theme/html/demo1/dist/assets/js/pages/crud/ktdatatable/base/data-local.js?v=7.2.8"></script>{% endcomment %}
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/fslightbox/fslightbox.bundle.js"></script>
+{#    <script src="/static/metronic/html/theme/demo1/dist/assets/plugins/custom/datatables/datatables.bundle.js"></script>#}
+
+    <script>
+        var datatable = $('.kt_datatable').dataTable( {
+            ordering:  false,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
+            }
+        } );
+        var request_application_decline_modal;
+        function show_request_application_decline_modal(id) {
+            request_application_decline_modal.show();
+            let myForm = $('#request_application_decline_form');
+            myForm.attr('action', "/company/application_action/"+id + "/" + 3 + "/");
+
+            return false;
+        }
+
+        function approve_form(id) {
+            $.get( "/company/application_action/"+id + "/" + 2, function( data ) {
+                if (data === "ok") {
+                    var drawerElement = document.getElementById("request_applications_userinfo_id" + id);
+                    var drawer = KTDrawer.getInstance(drawerElement);
+                    drawer.hide();
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+        function decline_form(id) {
+{% comment %}            var $myForm = $('#request_application_decline_form');
+
+            if(! $myForm[0].checkValidity()) {
+                // If the form is invalid, submit it. The form won't actually submit;
+                // this will just cause the browser to display the native HTML5 error messages.
+                $myForm.find(':submit').click();
+            }{% endcomment %}
+
+            $.post( "/company/application_action/"+id + "/" + 3, function( data ) {
+                if (data === "ok") {
+                    var drawerElement = document.getElementById("request_applications_userinfo_id" + id);
+                    var drawer = KTDrawer.getInstance(drawerElement);
+                    drawer.hide();
+                    request_application_decline_modal.hide();
+                    top.location.href = top.location.href;
+                } else {
+                    alert( data );
+                }
+            });
+            return false;
+        }
+
+        $(document).ready(function() {
+            request_application_decline_modal = new bootstrap.Modal(document.getElementById('request_application_decline_modal'))
+        });
+    </script>
+{% endblock javascript %}

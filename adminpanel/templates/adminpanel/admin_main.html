@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load pluralize %}
+
+{% block title %}Кабинет администратора{% endblock title %}
+
+{% block content %}
+    <div class="row gy-5 gx-xl-8">
+        <div class="col-xl-4">
+            <!--begin::List Widget 4-->
+            <div class="card card-xl-stretch mb-5 mb-xl-8">
+                <!--begin::Header-->
+                <div class="card-header border-0 pt-5">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="card-label fw-bolder text-dark">Статистика</span>
+                    </h3>
+                </div>
+                <!--end::Header-->
+                <!--begin::Body-->
+                <div class="card-body pt-5">
+
+                    <!--begin::Item-->
+                    <div class="d-flex align-items-sm-center mb-7">
+                        <!--begin::Section-->
+                        <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                            <div class="flex-grow-1 me-2">
+                                <a href="{% url "adminpanel:sticker_requests" %}" class="text-gray-800 text-hover-primary fs-6 fw-bolder">Запросов на оклейку</a>
+                            </div>
+                            <span class="badge badge-light fw-bolder my-2">{{ sticker_applications.count }}</span>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="d-flex align-items-sm-center mb-7">
+                        <!--begin::Section-->
+                        <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                            <div class="flex-grow-1 me-2">
+                                <a href="{% url "adminpanel:campaign_requests" %}" class="text-gray-800 text-hover-primary fs-6 fw-bolder">Акции на модерации</a>
+                            </div>
+                            <span class="badge badge-light fw-bolder my-2">{{ campaign_requests.count }}</span>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Item -->
+
+                    <!--begin::Item-->
+                    <div class="d-flex align-items-sm-center mb-7">
+                        <!--begin::Section-->
+                        <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                            <div class="flex-grow-1 me-2">
+                                <a class="text-gray-800 text-hover-primary fs-6 fw-bolder">Активные акции</a>
+                            </div>
+                            <span class="badge badge-light fw-bolder my-2">{{ active_campaigns.count }}</span>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="d-flex align-items-sm-center mb-7">
+                        <!--begin::Section-->
+                        <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                            <div class="flex-grow-1 me-2">
+                                <a href="{% url "adminpanel:admin_client_photoreports" %}" class="text-gray-800 text-hover-primary fs-6 fw-bolder">Не обработанных отчетов</a>
+                            </div>
+                            <span class="badge badge-light fw-bolder my-2">{{ reports_not_completed.count }}</span>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="d-flex align-items-sm-center mb-7">
+                        <!--begin::Section-->
+                        <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                            <div class="flex-grow-1 me-2">
+                                <a href="{% url "adminpanel:advertisers_list" %}" class="text-gray-800 text-hover-primary fs-6 fw-bolder">Рекламодателей</a>
+                            </div>
+                            <span class="badge badge-light fw-bolder my-2">{{ advertisers.count }}</span>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="d-flex align-items-sm-center mb-7">
+                        <!--begin::Section-->
+                        <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                            <div class="flex-grow-1 me-2">
+                                <a href="{% url "adminpanel:all_clients" %}" class="text-gray-800 text-hover-primary fs-6 fw-bolder">Автовладельцев</a>
+                            </div>
+                            <span class="badge badge-light fw-bolder my-2">{{ carowners.count }}</span>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Item-->
+
+                    <!--begin::Item-->
+                    <div class="d-flex align-items-sm-center mb-7">
+                        <!--begin::Section-->
+                        <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                            <div class="flex-grow-1 me-2">
+                                <a href="{% url "adminpanel:all_clients" %}" class="text-gray-800 text-hover-primary fs-6 fw-bolder">Кассиров</a>
+                            </div>
+                            <span class="badge badge-light fw-bolder my-2">{{ kassirs.count }}</span>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Item-->
+
+
+                    <!--begin::Item-->
+                    <div class="d-flex align-items-sm-center mb-7">
+                        <!--begin::Section-->
+                        <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                            <div class="flex-grow-1 me-2">
+                                <a class="text-gray-800 text-hover-primary fs-6 fw-bolder" >Пользователей</a>
+                            </div>
+                            <span class="badge badge-light fw-bolder my-2">{{ users.count }}</span>
+                        </div>
+                        <!--end::Section-->
+                    </div>
+                    <!--end::Item-->
+
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::List Widget 4-->
+        </div>
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% for child_menu in menu_category.get_children %}
+<div class="row" data-kt-menu-dismiss="true">
+    <div class="col-12 border-left-1">
+        <div class="menu-inline menu-column menu-active-bg">
+            <div class="menu-item">
+                <a href="{% url 'campaigns_list' child_menu.pk %}" class="menu-link">
+                    <span class="menu-bullet">
+                        <span class="bullet bullet-dot"></span>
+                    </span>
+                    <span class="menu-title">{{ child_menu.underscored_name }}
+                        {% with campaigns_count=child_menu.campaigns_count %}
+                        {# там сложная выборка из sql поэтому запоминаем в переменную #}
+                            {% if campaigns_count > 0 %}
+                                <span class="badge badge-circle badge-secondary ms-2">{{ campaigns_count }}</span>
+                            {% endif %}
+                        {% endwith %}
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

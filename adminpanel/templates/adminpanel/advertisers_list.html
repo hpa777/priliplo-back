@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% load pluralize %}
+
+{% block title %}Список рекламодателей{% endblock title %}
+
+{% block content %}
+
+
+
+
+
+    <!--begin::Toolbar-->
+    <div class="d-flex flex-wrap flex-stack pb-7">
+        <!--begin::Title-->
+        <div class="d-flex flex-wrap align-items-center my-1">
+            <h3 class="fw-bolder me-5 my-1">Рекламодатели ({{ object_list.count }})</h3>
+        </div>
+        <!--end::Title-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+
+
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 w-250px">Компания</th>
+                                        <th class="p-0 min-w-250px">Контактное лицо</th>
+                                        <th class="p-0 w-100px text-center">Контакты</th>
+                                        <th class="p-0 w-150px text-end">Количество акций</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+
+                                    {% for advertiser in object_list %}
+                                        <tr>
+                                            <td class="text-start">
+                                                <a href="{% url "adminpanel:advertiser_desc" advertiser.pk %}" class="text-dark fw-bolder text-hover-primary mb-1 fs-6 cursor-pointer">{{ advertiser.company_name }}</a>
+                                            </td>
+                                            <td>{{ advertiser.company_fio }}</td>
+                                            <td>
+                                                {{ advertiser.company_phone }}<br>
+                                                <a href="mailto:{{ advertiser.owner_user.username }}">{{ advertiser.owner_user.username }}</a>
+                                            </td>
+                                            <td class="text-end">
+                                                <span class="badge badge-light-warning">{{ advertiser.campaign_set.count }} {{ advertiser.campaign_set.count|rupluralize:"акция,акции,акций" }}</span>
+                                                <span class="badge badge-light-success">{{ advertiser.advertiser.company_name }}</span><br>
+                                            </td>
+                                            <td class="text-end">
+                                                <a href="{% url "adminpanel:login_in_as_user" advertiser.owner_user.pk %}" class="btn btn-success btn-sm btn-icon cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Войти под пользователем {{ advertiser.company_name }}"><i class="fas fa-sign-in-alt"></i></a>
+                                                <a class="btn btn-danger btn-sm btn-icon cursor-pointer" onclick="delete_advertiser('{{ advertiser.owner_user.pk }}')" data-bs-toggle="tooltip" data-bs-placement="top" title="Удалить пользователя {{ advertiser.company_name }}"><i class="fas fa-trash-alt"></i></a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+
+
+
+
+                                    </tbody>
+                                    <!--end::Table body-->
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+
+        <!--end::Tab pane-->
+
+    </div>
+    <!--end::Tab Content-->
+
+{% endblock content %}
+
+{% block css %}
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        var datatable = $('.kt_datatable').dataTable( {
+            ordering:  false,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Russian.json'
+            }
+        } );
+        function delete_advertiser(id) {
+            Swal.fire({
+                text: "Вы действительно хотите удалить рекламодателя" +  "?",
+                icon: "warning",
+                showCancelButton: true,
+                buttonsStyling: false,
+                confirmButtonText: "Да удалить!",
+                cancelButtonText: "Нет, не удалять",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-danger",
+                    cancelButton: "btn fw-bold btn-active-light-primary"
+                }
+            }).then(function (result) {
+                if (result.value) {
+                    $.get( "/adminpanel/advertiser_remove/"+id, function( data ) {
+                        if (data === "ok") {
+                            top.location.href = top.location.href;
+                        } else {
+                            alert( data );
+                        }
+                    });
+                    return false;
+                }
+            });
+        }
+    </script>
+{% endblock javascript %}

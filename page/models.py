@@ -1,0 +1,62 @@
+from django.db import models
+from django.utils.translation import ugettext_lazy as _, ugettext
+from django.contrib.auth.models import User
+from company.models import Advertiser
+from django.urls import resolve, reverse
+from ckeditor_uploader.fields import RichTextUploadingField
+
+
+class BasePage(models.Model):
+    created_date = models.DateTimeField(auto_now_add=True, verbose_name=u'Дата создания', editable=False)
+    edited_date = models.DateTimeField(auto_now=True, verbose_name=u'Дата редактирования', editable=False, null=True)
+
+    class Meta:
+        abstract = True
+
+
+class Page(BasePage):
+    """
+    A page in the page tree. This is the base class that custom content types
+    need to subclass.
+    """
+
+    PAGE_TYPE_CHOICES = (
+        (0, _("Страница")),
+        (1, _("Ссылка")),
+    )
+
+    in_menus = models.BooleanField(_("Опубликовать"), blank=True, default=True)
+    title = models.CharField(_("Заголовок"), max_length=1000, default='')
+    meta_description = models.CharField(_("Description"), max_length=1000, blank=True)
+    meta_keywords = models.CharField(_("Keywords"), max_length=1000, blank=True)
+    menu_title = models.CharField(_("Название в меню"), max_length=255, null=True, blank=True, help_text=_("Оставьте пустым для использования названия страницы"))
+    slug = models.SlugField(_("Имя для url"), unique=True, blank=True, help_text=_("Только английские буквы, цифры и знаки минус и подчеркивание. <br><a id='set_main_page'>Главная страница</a>"))
+    login_required = models.BooleanField(_("Требуется логин"), default=False,
+                                         help_text=_("Если выбрано, то только залогиненный пользователь может просматривать страницу"))
+    content = RichTextUploadingField("Текст", blank=True)
+    page_type = models.IntegerField(_("Тип страницы"), choices=PAGE_TYPE_CHOICES, default=0)
+    redirect_url = models.CharField(_("URL для редиректа"), max_length=1000, default='', blank=True)
+
+
+    class Meta:
+        verbose_name = _("Страница")
+        verbose_name_plural = _("Страницы")
+
+    def __str__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        """
+        URL for a page - for ``Link`` page types, simply return its
+        slug since these don't have an actual URL pattern. Also handle
+        the special case of the homepage being a page object.
+        """
+        slug = self.slug
+        if self.page_type == 1:
+            return self.redirect_url
+        elif slug == "main":
+            return reverse("index")
+        else:
+            return reverse("pagedetail", kwargs={"slug": slug})
+
+

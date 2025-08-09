@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}История списаний баллов{% endblock title %}
+
+
+{% block content %}
+
+    <!--begin::Tab Content-->
+    <div class="tab-content">
+        <!--begin::Tab pane-->
+
+        <div class="col-xl-12">
+
+
+            <!--begin::Tables Widget 5-->
+            <div class="card card-xxl-stretch mb-5 mb-xxl-8">
+
+                <!--begin::Body-->
+
+                <div class="card-body py-3">
+                    <div class="tab-content">
+                        <div class="table-responsive">
+                            <!--begin::Table-->
+                            <div class="table-responsive">
+                                <!--begin::Table-->
+                                <table class="table table-striped table-row-dashed table-row-gray-200 align-middle gs-0 gy-4 kt_datatable">
+                                    <!--begin::Table head-->
+                                    <thead>
+                                    <tr class="">
+                                        <th class="p-0 w-250px date_column">Дата</th>
+                                        <th class="p-0 min-w-250px">Имя</th>
+                                        <th class="p-0 w-250px text-center">Автомобиль</th>
+                                        <th class="p-0 w-150px text-center">Гос. номер</th>
+                                        <th class="p-0 w-100px text-center">Колличество баллов</th>
+                                    </tr>
+                                    </thead>
+                                    <!--end::Table head-->
+                                    <!--begin::Table body-->
+                                    <tbody>
+                                    {% for object in object_list %}
+                                        <tr>
+                                            <td class="text-dark ">{{ object.edited_date|date:'d.m.Y H:i' }}</td>
+                                            <td class="text-muted fw-bold">{{ object.client.userprofile.name }}</td>
+                                            <td class="text-end text-muted fw-bold">{{ object.client.userprofile.auto_marka }} {{ object.client.userprofile.auto_model }} ({{ object.client.userprofile.autogv }})</td>
+                                            <td class="text-muted">{{ object.client.userprofile.autonumber }}</td>
+                                            <td class="text-end text-muted fw-bold">{{ object.balance_decrease|floatformat }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                    <!--end::Table body-->
+                                    <tfoot>
+                                    <tr>
+                                        <th class="p-0 w-250px ">Дата</th>
+                                        <th class="p-0 min-w-250px">Имя</th>
+                                        <th class="p-0 w-250px text-center">Автомобиль</th>
+                                        <th class="p-0 w-150px text-center">Гос. номер</th>
+                                        <th class="p-0 w-100px text-center">Колличество баллов</th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end::Body-->
+            </div>
+            <!--end::Tables Widget 5-->
+        </div>
+        <!--end::Tab pane-->
+
+    </div>
+    <!--end::Tab Content-->
+
+{% endblock content %}
+
+{% block css %}
+    <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" media="print" href="/static/metronic/html/theme/demo1/dist/assets/css/print.css" />
+{% endblock css %}
+
+{% block javascript %}
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $('.kt_datatable thead th').each( function () {
+            var title = $(this).text();
+            var html = '';
+
+            if ($(this).hasClass("date_column")) {
+                html = '<div><small><a class="cursor-pointer" onclick="$(\'.datatable_header_search:first\').val(\'{% now "d.m.Y" %} - {% now "d.m.Y" %}\').change()">Сегодня </a>&nbsp;|&nbsp;<a class="cursor-pointer" onclick="$(\'.datatable_header_search:first\').val(\'{{ yesterday|date:'d.m.Y' }} - {{ yesterday|date:'d.m.Y' }}\').change()">Вчера</a></small></div>';
+            }
+            html += '<input type="text" class="datatable_header_search" placeholder="'+title+'" />';
+            $(this).html(html);
+        } );
+
+    </script>
+    <script src="/static/metronic/html/theme/demo1/dist/assets/js/custom/priliplo/kassa/bonus_changes_history.js"></script>
+{% endblock javascript %}

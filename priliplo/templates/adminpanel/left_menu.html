@@ -1,0 +1,118 @@
+{% load badges %}
+<!--begin::Aside Menu-->
+<div class="hover-scroll-overlay-y my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer" data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="0">
+    <!--begin::Menu-->
+    <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true">
+        <div class="menu-item">
+            <a class="menu-link active" href="/adminpanel">
+										<span class="menu-icon">
+											<i class="bi bi-house fs-3"></i>
+										</span>
+                <span class="menu-title">Сводка</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:sticker_requests" %}">
+                <span class="menu-icon">
+											<i class="far fa-sticky-note"></i>
+										</span>
+                <span class="menu-title">Запросы на оклейку
+                    {% show_badge_sticker_requests %}
+                </span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:campaign_requests" %}">
+										<span class="menu-icon">
+											<i class="bi bi-hdd-stack fs-3"></i>
+										</span>
+                <span class="menu-title">Модерация акций
+                    {% show_badge_campaign_requests %}
+                </span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:client_requests" 1 %}">
+										<span class="menu-icon">
+											<i class="fas fa-walking fs-3"></i>
+										</span>
+                <span class="menu-title">Запросы на участие
+                    {% show_badge_client_requests_1 %}
+                </span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:admin_client_photoreports" %}">
+										<span class="menu-icon">
+											<i class="fas fa-file-upload fs-3"></i>
+										</span>
+                <span class="menu-title">Отчеты клиентов
+                    {% show_badge_admin_client_photoreports %}
+                </span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:client_requests" 2 %}">
+										<span class="menu-icon">
+											<i class="fas fa-file-contract fs-3"></i>
+										</span>
+                <span class="menu-title">Одобренные участники</span>
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:advertisers_list" %}">
+										<span class="menu-icon">
+											<i class="fas fa-funnel-dollar fs-3"></i>
+										</span>
+                <span class="menu-title">Рекламодатели</span>
+                {% comment %}<span class="badge badge-circle badge-warning">5</span>{% endcomment %}
+            </a>
+        </div>
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:all_clients" %}">
+										<span class="menu-icon">
+                                            <i class="fas fa-car-side fs-3"></i>
+										</span>
+                <span class="menu-title">Автовладельцы</span>
+            </a>
+        </div>
+
+        <div class="separator my-2"></div>
+
+        <div class="menu-item">
+            <!--begin:Menu heading-->
+            <h4 class="menu-content text-muted mb-0 fs-7 text-uppercase">CRM</h4>
+            <!--end:Menu heading-->
+        </div>
+
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:todo_list" %}">
+										<span class="menu-icon">
+                                            <i class="fas fa-check fs-3"></i>
+										</span>
+                <span class="menu-title">Задачи
+                    {% show_badge_admin_tasks %}
+                </span>
+            </a>
+        </div>
+
+
+        <div class="menu-item">
+            <a class="menu-link" href="{% url "adminpanel:todo_group_list" %}">
+										<span class="menu-icon">
+                                            <i class="fas fa-layer-group"></i>
+										</span>
+                <span class="menu-title">Группы задач</span>
+            </a>
+        </div>
+
+
+
+
+
+
+
+
+    </div>
+    <!--end::Menu-->
+</div>

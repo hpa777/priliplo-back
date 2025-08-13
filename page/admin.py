@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Page
+from .models import Page, Slider, Slide
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -18,6 +18,17 @@ class PageAdmin(admin.ModelAdmin):
     )
 
 admin.site.register(Page, PageAdmin)
+
+
+
+admin.site.register(Slider)
+
+class SlideAdmin(admin.ModelAdmin):
+    list_display = ('slider', 'title', 'img_tag')
+    list_filter = ('slider',)
+    ordering =('slider', 'rank',)
+
+admin.site.register(Slide, SlideAdmin)
 
 
 

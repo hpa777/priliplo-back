@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from company.models import Advertiser
 from django.urls import resolve, reverse
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.utils.html import mark_safe
+from django.conf import settings
 
 
 class BasePage(models.Model):
@@ -60,3 +62,35 @@ class Page(BasePage):
             return reverse("pagedetail", kwargs={"slug": slug})
 
 
+class Slider(models.Model):
+    title = models.CharField(_("Название"), max_length=512, blank=False)
+    slug = models.SlugField(_("Код"), blank=False, unique=True)
+    page = models.ForeignKey(Page, on_delete=models.DO_NOTHING, null=True, blank=True)
+
+    class Meta:
+        verbose_name = _("Слайдер")
+        verbose_name_plural = _("Слайдеры")
+
+    def __str__(self):
+        return self.title
+    
+class Slide(models.Model):
+    slider = models.ForeignKey(Slider, on_delete=models.DO_NOTHING)
+    title = models.CharField(_("Заголовок"), max_length=128, blank=False)
+    text = models.TextField(_("Текст"), max_length=512, blank=True)
+    btn_text = models.CharField(_("Текст кнопки"), blank=True, max_length=128)
+    btn_url = models.CharField(_("URL кнопки"), max_length=512, blank=True)    
+    img = models.ImageField(_("Картинка"), upload_to="sliders/%Y/%m/%d", blank=False)
+    img_mob = models.ImageField(_("Картинка для мобильных"), upload_to="sliders/%Y/%m/%d", blank=True)
+    img_tablet = models.ImageField(_("Картинка для планшетов"), upload_to="sliders/%Y/%m/%d", blank=True)
+    icon = models.FileField(_('Иконка'), upload_to="sliders/%Y/%m/%d", blank=True)
+    rank = models.IntegerField(_('Сортировка'), default=0)
+
+    class Meta:
+        verbose_name = _("Слайд")
+        verbose_name_plural = _("Слайды")
+
+    def __str__(self):
+        return self.title
+    def img_tag(self):
+        return mark_safe('<img src="%s%s" height="100" />' % (settings.MEDIA_URL, self.img))

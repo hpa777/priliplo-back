@@ -1,8 +1,32 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, generics
 from company.models import Advertiser, Campaign, BusinessType
-from .serializers import CampaignSerializer
+from .serializers import *
+from django.http import Http404
 
 class CampaignViewSet(viewsets.ModelViewSet):
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+class SliderSlidesAPIView(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = SlideSerializer    
+    def get_queryset(self):
+        """
+        Возвращает список слайдов для слайдера с указанным slug.
+        """
+        slug = self.kwargs['slug']
+        try:
+            slider = Slider.objects.get(slug=slug)
+        except Slider.DoesNotExist:
+           raise Http404
+
+        return Slide.objects.filter(slider=slider).order_by('rank')
+    
+
+class SliderWithSlidesAPIView(generics.RetrieveAPIView):
+    permission_classes = [permissions.AllowAny]    
+    serializer_class = SliderWithSlidesSerializer
+    queryset = Slider.objects.all()
+    lookup_field = 'slug' # Use slug instead of pk
+    lookup_url_kwarg = 'slug'

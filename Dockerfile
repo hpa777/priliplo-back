@@ -1,9 +1,17 @@
- FROM python:3
- ENV PYTHONUNBUFFERED 1
- RUN /usr/local/bin/python -m pip install --upgrade pip
- RUN mkdir /code
- WORKDIR /code
- ADD requirements.txt /code/
- RUN pip install -r requirements.txt
- ADD . /code/
- #docker-compose run web python manage.py migrate
+# pull official base image
+FROM python:3.9
+
+# set work directory
+WORKDIR /usr/src/api
+
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+
+# copy project
+#COPY . .

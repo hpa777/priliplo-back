@@ -60,7 +60,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
     'api',
-    'corsheaders'
+    'corsheaders',
+    'cabinet',
+    'imagefield'
 ]
 
 REST_FRAMEWORK = {

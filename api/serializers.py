@@ -12,10 +12,19 @@ class SliderSerializer(serializers.ModelSerializer):
         model = Slider
         fields = '__all__'
 
-class SlideSerializer(serializers.ModelSerializer):    
+
+class CustomFileRelatedField(serializers.RelatedField):
+    def to_representation(self, value):       
+        return value.file.url
+
+class SlideSerializer(serializers.ModelSerializer):
+    img = CustomFileRelatedField(read_only=True)
+    img_tablet = CustomFileRelatedField(read_only=True)
+    img_mob = CustomFileRelatedField(read_only=True)
+    icon = CustomFileRelatedField(read_only=True)   
     class Meta:
         model = Slide
-        fields = '__all__'    
+        fields = '__all__'
 
 class SliderWithSlidesSerializer(serializers.ModelSerializer):
     slides = SlideSerializer(many=True, read_only=True, source='slide_set')

@@ -6,6 +6,8 @@ from django.urls import resolve, reverse
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.html import mark_safe
 from django.conf import settings
+from cabinet.fields import CabinetForeignKey, ForeignKeyRawIdWidget
+from cabinet.models import File
 
 
 class BasePage(models.Model):
@@ -80,10 +82,32 @@ class Slide(models.Model):
     text = models.TextField(_("Текст"), max_length=512, blank=True)
     btn_text = models.CharField(_("Текст кнопки"), blank=True, max_length=128)
     btn_url = models.CharField(_("URL кнопки"), max_length=512, blank=True)    
-    img = models.ImageField(_("Картинка"), upload_to="sliders/%Y/%m/%d", blank=False)
-    img_mob = models.ImageField(_("Картинка для мобильных"), upload_to="sliders/%Y/%m/%d", blank=True)
-    img_tablet = models.ImageField(_("Картинка для планшетов"), upload_to="sliders/%Y/%m/%d", blank=True)
-    icon = models.FileField(_('Иконка'), upload_to="sliders/%Y/%m/%d", blank=True)
+    
+    img = CabinetForeignKey(verbose_name=_("Картинка"), 
+                            related_name='slide_img_ref',
+                            on_delete=models.SET_NULL, 
+                            null=True, 
+                            blank=False)
+
+    
+    img_mob = CabinetForeignKey(verbose_name=_("Картинка для мобильных"),
+                                related_name='slide_img_mobile_ref',
+                                on_delete=models.SET_NULL,
+                                null=True,
+                                blank=True
+                                )
+    
+    img_tablet = CabinetForeignKey(verbose_name=_("Картинка для планшетов"),
+                                   related_name='slide_img_tablet_ref',
+                                   on_delete=models.SET_NULL,
+                                   null=True,
+                                   blank=True)    
+
+    icon = CabinetForeignKey(verbose_name=_("Иконка"),
+                             related_name='slide_icon_ref',
+                             on_delete=models.SET_NULL,
+                             null=True,
+                             blank=True)
     rank = models.IntegerField(_('Сортировка'), default=0)
 
     class Meta:
@@ -92,5 +116,5 @@ class Slide(models.Model):
 
     def __str__(self):
         return self.title
-    def img_tag(self):
-        return mark_safe('<img src="%s%s" height="100" />' % (settings.MEDIA_URL, self.img))
+    def img_tag(self):                
+        return mark_safe('<img src="%s%s" height="100" />' % (settings.MEDIA_URL, self.img.file))

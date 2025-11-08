@@ -26,6 +26,7 @@ admin.site.register(Slider)
 class SlideAdmin(admin.ModelAdmin):
     list_display = ('slider', 'title', 'img_tag')
     list_filter = ('slider',)
+    raw_id_fields = ('img', 'img_mob', 'img_tablet', 'icon')
     ordering =('slider', 'rank',)
 
 admin.site.register(Slide, SlideAdmin)

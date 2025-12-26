@@ -11,5 +11,6 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('sliders/<slug:slug>/slides/', SliderSlidesAPIView.as_view(), name='slider-slides'),  # GET all slides for a slider by slug
-    path('sliders/<slug:slug>/', SliderWithSlidesAPIView.as_view(), name='slider-with-slides'), # GET slider details with associated slides      
+    path('sliders/<slug:slug>/', SliderWithSlidesAPIView.as_view(), name='slider-with-slides'), # GET slider details with associated slides
+    path('faq/', FaqViewSet.as_view(), name='faq'),      
 ]

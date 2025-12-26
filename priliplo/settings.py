@@ -201,7 +201,9 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'full',
         'height': '500',
         'width': '100%',
-        # 'extraPlugins': 'youtube'
+        'allowedContent': True,
+        "removePlugins": "stylesheetparser",        
+        'extraPlugins': 'sourcedialog'
     },
 }
 

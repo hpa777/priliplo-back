@@ -118,3 +118,21 @@ class Slide(models.Model):
         return self.title
     def img_tag(self):                
         return mark_safe('<img src="%s%s" height="100" />' % (settings.MEDIA_URL, self.img.file))
+    
+class Faq(models.Model):
+
+    QUSTION_TYPE_CHOICES = (
+        (0, _("Авто-владельцу")),
+        (1, _("Бизнесу")),
+    )
+    type = models.IntegerField(_("Тип вопроса"), choices=QUSTION_TYPE_CHOICES, default=0, blank=False)
+    rank = models.IntegerField(_('Сортировка'), default=0)
+    question = models.TextField(_("Вопрос"), max_length=1000, blank=False)
+    answer = RichTextUploadingField("Ответ", blank=False)
+
+    class Meta:
+        verbose_name = _("Вопрос")
+        verbose_name_plural = _("FAQ")
+
+    def __str__(self):
+        return self.question

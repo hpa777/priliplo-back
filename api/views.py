@@ -4,9 +4,15 @@ from .serializers import *
 from django.http import Http404
 
 class CampaignViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]    
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+
+class FaqViewSet(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = FaqSerializer
+    queryset = Faq.objects.all().order_by('rank')
 
 class SliderSlidesAPIView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]

@@ -1,10 +1,15 @@
 from rest_framework import serializers
 from company.models import Advertiser, Campaign, BusinessType
-from page.models import Slider, Slide
+from page.models import Slider, Slide, Faq
 
 class CampaignSerializer(serializers.ModelSerializer):
     class Meta:
         model = Campaign
+        fields = '__all__'
+
+class FaqSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Faq
         fields = '__all__'
 
 class SliderSerializer(serializers.ModelSerializer):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Page, Slider, Slide
+from .models import Page, Slider, Slide, Faq
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -30,6 +30,12 @@ class SlideAdmin(admin.ModelAdmin):
     ordering =('slider', 'rank',)
 
 admin.site.register(Slide, SlideAdmin)
+
+class FaqAdmin(admin.ModelAdmin):
+    list_display = ('type', 'rank', 'question')
+    list_filter = ('type',)
+
+admin.site.register(Faq, FaqAdmin)
 
 
 

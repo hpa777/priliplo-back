@@ -1,7 +1,6 @@
 .idea/
 .vscode
 nginx/
-migrations/
 media/
 
 # Byte-compiled / optimized / DLL files

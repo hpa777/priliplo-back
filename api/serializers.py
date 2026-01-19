@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from company.models import Advertiser, Campaign, BusinessType
-from page.models import Slider, Slide, Faq
+from page.models import Slider, Slide, Faq, Dictionary
 
 class CampaignSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,3 +36,9 @@ class SliderWithSlidesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Slider        
         fields = ['id', 'title', 'slug', 'slides']
+
+
+class DictionarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dictionary
+        fields = '__all__'

@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, generics
 from company.models import Advertiser, Campaign, BusinessType
 from .serializers import *
 from django.http import Http404
+from page.models import Dictionary
 
 class CampaignViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]    
@@ -36,3 +37,13 @@ class SliderWithSlidesAPIView(generics.RetrieveAPIView):
     queryset = Slider.objects.all()
     lookup_field = 'slug' # Use slug instead of pk
     lookup_url_kwarg = 'slug'
+
+
+class DictionaryViewSet(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]    
+    serializer_class = DictionarySerializer
+    def get_queryset(self):
+        locale = self.kwargs['locale']
+        context = self.kwargs['context']
+        return Dictionary.objects.filter(locale=locale, context=context)
+    

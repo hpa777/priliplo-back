@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Page, Slider, Slide, Faq
+from .models import Page, Slider, Slide, Faq, Dictionary
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -37,5 +37,9 @@ class FaqAdmin(admin.ModelAdmin):
 
 admin.site.register(Faq, FaqAdmin)
 
+class DictionaryAdmin(admin.ModelAdmin):
+    list_filter = ('locale', 'context',)
+
+admin.site.register(Dictionary, DictionaryAdmin)
 
 

@@ -136,3 +136,28 @@ class Faq(models.Model):
 
     def __str__(self):
         return self.question
+    
+class Dictionary(models.Model):
+    """Модель для хранения локализованных словарей."""
+    LOCALE_CHOICES = (
+        ('en', _('en')),
+        ('ru', _('ru')),
+    )
+
+    CONTEXET_CHOICES = (
+        ('vrn', _('Воронеж')),        
+    )
+
+    locale = models.CharField(_("Локаль (язык)"), choices=LOCALE_CHOICES, max_length=10, default='ru', db_index=True)
+    context = models.CharField(_("Контекст"), choices=CONTEXET_CHOICES, max_length=10, default='vrn', blank=True, db_index=True)    
+    key = models.CharField(_("Ключ"), max_length=512)
+    value = models.TextField(_("Значение"))
+
+    class Meta:
+        verbose_name = _("Словарь")
+        verbose_name_plural = _("Словари")
+        unique_together = [['locale', 'context', 'key']]
+
+    def __str__(self):
+        value = self.value[:50] + '...' if len(self.value) > 50 else self.value
+        return f"{self.key} ({self.locale}): {value}"

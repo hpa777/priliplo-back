@@ -13,5 +13,5 @@ urlpatterns = [
     path('sliders/<slug:slug>/slides/', SliderSlidesAPIView.as_view(), name='slider-slides'),  # GET all slides for a slider by slug
     path('sliders/<slug:slug>/', SliderWithSlidesAPIView.as_view(), name='slider-with-slides'), # GET slider details with associated slides
     path('faq/', FaqViewSet.as_view(), name='faq'),    
-    path('dictionary/<slug:locale>/<slug:context>/', DictionaryViewSet.as_view(), name='dictionary')      
+    path('dictionary/<slug:locale>/<slug:context>/', dictionary_view, name='dictionary')      
 ]

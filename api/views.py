@@ -1,4 +1,7 @@
 from rest_framework import viewsets, permissions, generics
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from company.models import Advertiser, Campaign, BusinessType
 from .serializers import *
 from django.http import Http404
@@ -39,11 +42,17 @@ class SliderWithSlidesAPIView(generics.RetrieveAPIView):
     lookup_url_kwarg = 'slug'
 
 
-class DictionaryViewSet(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny]    
-    serializer_class = DictionarySerializer
-    def get_queryset(self):
-        locale = self.kwargs['locale']
-        context = self.kwargs['context']
-        return Dictionary.objects.filter(locale=locale, context=context)
-    
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def dictionary_view(request, locale, context):    
+
+    qs = Dictionary.objects.filter(
+        locale=locale,
+        context=context
+    ).values('key', 'value')
+
+    return Response({
+        item['key']: item['value']
+        for item in qs
+    })    
